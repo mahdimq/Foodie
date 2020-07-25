@@ -1,7 +1,8 @@
 import os
 from flask import Flask, render_template, redirect, request, g, flash, session, jsonify
 from models import db, connect_db, User, Recipe, Favorite
-from forms import SignupForm, LoginForm, RecipeForm
+# from secret import API_KEY
+from forms import SignupForm, LoginForm, EditUserForm, RecipeForm
 from sqlalchemy.exc import IntegrityError
 import requests
 
@@ -133,7 +134,6 @@ def login():
 
 # # ################## HOME PAGE BASIC ###################
 
-
 @app.route("/")
 def homepage():
     """Show home page with or without auth
@@ -161,6 +161,7 @@ def homepage():
 @app.route("/users/<int:id>")
 def show_user(id):
     """Redirect to users page"""
+
     if CURR_USER not in session or id != session[CURR_USER]:
         flash("You must be logged in to view this page", "danger")
         return redirect("/login")
@@ -169,7 +170,57 @@ def show_user(id):
     return render_template("/users/users.html", user=user)
 
 
+# ========= NEED TO USE PATCH METHOD =========
+@app.route("/users/<int:id>/update", methods=["GET", "POST"])
+def update_user(id):
+    """Show user update form and redirect to users page"""
+
+    user = User.query.get(id)
+
+    if id != session[CURR_USER] or "user_id" not in session:
+        flash("You do not have permission to do delete this user!", "primary")
+        return redirect(f"/users/{session[CURR_USER]}")
+
+    form = EditUserForm(obj=user)
+
+    if form.validate_on_submit():
+        user.username = form.username.data
+        user.email = form.email.data
+        user.img_url = form.img_url.data
+
+        db.session.commit()
+        flash('Changes successfully made to account', 'info')
+        return redirect(f'/users/{id}')
+    try:
+        return render_template("/users/update.html", form=form, user=user)
+    except:
+        return ('', 403)
+
+
+# #################### DELETE USER ROUTE ####################
+
+# ============= NEED TO USE DELETE METHOD =============
+@app.route("/users/<int:id>/delete", methods=["POST"])
+def delete_user(id):
+    """Delete user."""
+
+    # Check if user is authorized
+    if id != session[CURR_USER] or "user_id" not in session:
+        flash("You do not have permission to do delete this user!", "primary")
+        return redirect(f"/users/{session[CURR_USER]}")
+
+    # Delete user from database
+    else:
+        user = User.query.get_or_404(id)
+        db.session.delete(user)
+        db.session.commit()
+        # remove from session
+        session.pop(CURR_USER)
+        flash(f"{g.user.username}'s account has been deleted!", "info")
+        return redirect("/")
+
 # ####################### SHOW RECIPES ######################
+
 @app.route("/recipe")
 def show_recipe():
     """Show recipe details"""
@@ -187,7 +238,6 @@ def logout():
     return redirect("/")
 
 # ##################### ERROR 404 PAGE ######################
-
 
 @app.errorhandler(404)
 def page_not_found(error):

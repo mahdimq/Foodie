@@ -20,10 +20,10 @@
     <p class="lead">Username: {{user.username}}</p>
     <p class="lead">Email: {{user.email}}</p>
 
-    <form class="form-group  mb-1 mt-4" action="#" method="POST">
-      <a class="btn btn-lg btn-primary" href="/" role="button">Back</a>
-      <a class="btn btn-lg btn-primary" href="/logout" role="button">Logout</a>
-      <button class="btn btn-lg btn-warning" type="submit">delete user</button>
+    <form class="form-group mb-1 mt-4" action="/users/{{user.id}}/delete" method="POST">
+      <a class="btn btn-lg btn-info" href="/users/{{user.id}}/update" role="button">Edit</a>
+      <a class="btn btn-lg btn-info" href="/logout" role="button">Logout</a>
+      <button class="btn btn-lg btn-warning" type="submit">Delete User</button>
     </form>
   </div>
 

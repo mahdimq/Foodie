@@ -39,14 +39,18 @@ body {
 
 .profile-pic {
 	width: 70px;
+	height: 70px;
 	border-radius: 50%;
 }
 
 /* ################ NAVBAR ############### */
 
 .nav-pic {
-	width: 40px;
+	width: 35px;
+	height: 35px;
 	border-radius: 50%;
+	margin: none;
+	padding: none;
 }
 
 /* ########## CAROUSEL ############### */
@@ -69,6 +73,8 @@ body {
 	/* border: solid #d3d3d3 2px; */
 	background-size: cover;
 	background-position: center center;
+	margin-right: 5px;
+	margin-top: 5px;
 }
 
 /* COMMENT MARGIN BOTTOM OUT */

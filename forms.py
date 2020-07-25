@@ -18,6 +18,13 @@ class LoginForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired(message="Username required")])
     password = PasswordField("Password", validators=[InputRequired(message="Password required")])
 
+class EditUserForm(FlaskForm):
+    """Form for editing users."""
+    username = StringField("Username", validators=[InputRequired()])
+    # password = PasswordField("Password", validators=[InputRequired(message="Password required")])
+    email = StringField("E-mail", validators=[InputRequired(), Email()])
+    img_url = URLField('Profile Image (optional)', validators=[Optional()])
+
 class RecipeForm(FlaskForm):
     """Recipe search form"""
     query = StringField("Search")
