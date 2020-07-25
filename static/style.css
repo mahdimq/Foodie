@@ -1,0 +1,221 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+/* ########## MAIN BACKGROUND IMAGE ########## */
+/*
+body {
+	background: url(/static/images/background.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+} */
+
+html,
+body {
+	min-height: 100%;
+	min-width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	background: url('/static/images/background.jpg') no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	/* min-width: 100%; */
+	/* height: auto; */
+	font-family: 'Avenir Light', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
+		Arial, sans-serif !important;
+}
+
+/* ############## USER DETAILS ############# */
+
+.profile-pic {
+	width: 70px;
+	border-radius: 50%;
+}
+
+/* ################ NAVBAR ############### */
+
+.nav-pic {
+	width: 40px;
+	border-radius: 50%;
+}
+
+/* ########## CAROUSEL ############### */
+
+.carousel {
+	background-color: #d3d3d3;
+	/* padding: 1em; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	flex-wrap: nowrap; /* allow side scroll */
+	overflow-x: auto; /* allow side scroll */
+}
+.carousel-img {
+	width: auto;
+	height: 250px;
+	background-color: #d3d3d3;
+	/* border-radius: 50%; */
+	/* border: solid #d3d3d3 2px; */
+	background-size: cover;
+	background-position: center center;
+}
+
+/* COMMENT MARGIN BOTTOM OUT */
+
+/* .carousel {
+	background: #d3d3d3;
+	margin-bottom: 30px;
+	padding: 1em auto 2em;
+}
+
+.carousel-cell {
+	width: auto;
+	height: 250px;
+	margin-right: 10px;
+	margin-top: 10px;
+} */
+
+/* ############ DIET TYPES ############# */
+.diets {
+	background-color: #d3d3d3;
+	padding: 1em;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	position: relative;
+	flex-wrap: nowrap; /* allow side scroll */
+	overflow-x: auto; /* allow side scroll */
+}
+.diet-img {
+	width: 100px;
+	height: 100px;
+	background-color: #d3d3d3;
+	border-radius: 50%;
+	border: solid #d3d3d3 2px;
+	background-size: cover;
+	background-position: center center;
+}
+
+.diet-link {
+	text-decoration: none;
+	color: black;
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 0.8em;
+	transition: all 200ms;
+}
+
+.diet-link:hover,
+.diet-link:focus {
+	opacity: 0.8;
+}
+
+.diet {
+	width: 135px;
+	text-align: center;
+	align-content: space-between;
+	flex: 0 0 auto; /* allow side scroll */
+}
+
+.diet + .diet {
+	margin-left: 2em;
+}
+
+.text {
+	position: absolute;
+	left: 50%;
+	bottom: 10%;
+	transform: translate(-50%, -50%);
+}
+
+/* ############## RECIPE DISPLAY ############# */
+
+.recipe-img {
+	border-radius: 5px;
+	width: 100%;
+}
+
+.info-list {
+	border: solid 1px rgb(131, 131, 131);
+	border-radius: 5px;
+	padding: 1em;
+	margin: auto;
+	width: 100%;
+	height: 100%;
+}
+
+.recipe-subtitle {
+	margin: 1em auto;
+}
+/* NEED TO ADD STYLING HERE */
+
+/* ############### FOOTER ############## */
+
+ul {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+	/* opacity: 0.6; */
+	color: #fff;
+}
+
+a:hover {
+	opacity: 0.9;
+}
+
+.footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	background-color: #607d8b;
+	color: #fff;
+	padding: 20px 0;
+	/* STICKY FOOTER */
+	/* position: absolute;
+	bottom: 0;
+	width: 100%; */
+}
+
+.footer ul {
+	display: flex;
+}
+
+.footer ul li {
+	margin-left: 16px;
+}
+
+.footer p {
+	text-transform: uppercase;
+	font-size: 14px;
+	opacity: 0.6;
+	align-self: center;
+}
+
+@media (max-width: 1100px) {
+	.footer {
+		flex-direction: column;
+	}
+
+	.footer p {
+		text-align: center;
+		/* margin-bottom: 20px; */
+	}
+
+	.footer ul li {
+		margin: 0 8px;
+	}
+}
+/* ################### */

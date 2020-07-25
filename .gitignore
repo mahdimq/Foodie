@@ -1,0 +1,10 @@
+/static/temp.js/
+./recipes.py/
+./spoonacular.py/
+/__pycache__/
+./templates/edamam.html/
+./templates/menu.html/
+./templates/search.html/
+./templates/steps.html/
+./view/
+/venv/

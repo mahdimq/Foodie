@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}User Details{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="jumbotron my-4 px-4">
+
+    <div class="row align-items-center">
+      <div class="col-sx-6 mx-3">
+        <img class="profile-pic" src="{{user.img_url}}" alt="">
+      </div>
+
+      <div class="col-xs-6 text-left">
+        <h1 class="display-4">{{user.username}}</h1>
+      </div>
+    </div>
+    <hr class="my-4">
+
+    <p class="lead">Username: {{user.username}}</p>
+    <p class="lead">Email: {{user.email}}</p>
+
+    <form class="form-group  mb-1 mt-4" action="#" method="POST">
+      <a class="btn btn-lg btn-primary" href="/" role="button">Back</a>
+      <a class="btn btn-lg btn-primary" href="/logout" role="button">Logout</a>
+      <button class="btn btn-lg btn-warning" type="submit">delete user</button>
+    </form>
+  </div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}INDEX{% endblock %}
+
+{% block content %}
+
+<!-- CAROUSEL -->
+<!-- <div class="carousel" data-flickity='{ "wrapAround": false }'>
+  {% for t in diets %}
+  <img class="carousel-cell" src="{{t.image}}" alt="">
+  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/188719-312x231.jpg" alt="">
+  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/1057064-312x231.jpg" alt="">
+  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/590042-312x231.jpg" alt="">
+  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/737441-312x231.jpeg" alt="">
+  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/590042-312x231.jpg" alt="">
+  {% endfor %}
+</div> -->
+
+<!-- CSS CAROUSEL -->
+<div class="carousel">
+  {% for d in diets %}
+  <div class="carousel-cell">
+    <img class='carousel-img' src="{{d.image}}" alt="">
+  </div>
+  {% endfor %}
+</div>
+
+
+<!-- DIET TYPE AREA -->
+
+<div class="diets">
+  {% for d in diets %}
+  <div class="diet">
+    <a class="diet-link" href="#">
+      <img class='diet-img' src="{{d.image}}" alt="">
+      <div class="txt">{{d.name}}</div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- DISPLAY RECIPE AREA -->
+<div class="container">
+  <div class="row justify-content-center align-items-center mt-2">
+
+    {% for t in title %}
+    <!-- FIX RESPONSIVENESS -->
+    <div id="recipe-display" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 my-2">
+      <div class="card" style="width: 100%;">
+        <img src="{{t.image}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{t.title}}</h5>
+          <p class="card-text">Some quick example text toup the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-info">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- EXAMPLE -->
+
+
+{% endblock %}

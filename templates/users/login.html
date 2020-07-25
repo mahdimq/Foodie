@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron-fluid jumbotron my-4 mx-4">
+  <div class="container">
+    <h1 class="my-3">Login</h1>
+
+    <form method='POST'>
+      {{ form.hidden_tag() }}
+      <div class="form-row">
+        {% for field in form if field.widget.input_type != "hidden" %}
+        <div class="form-group col-md-6">
+          {{field.label (class_="h5")}}
+          {{field (class_="form-control")}}
+          {% for error in field.errors %}
+          <div class="form-text text-danger">{{error}}</div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-lg btn-info">Login</button>
+      <a class="btn btn-lg btn-warning" href="/signup">Signup</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
