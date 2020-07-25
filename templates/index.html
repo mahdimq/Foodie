@@ -39,26 +39,63 @@
   {% endfor %}
 </div>
 
-<!-- DISPLAY RECIPE AREA -->
+<!-- END CAROUSEL -->
+
+
+<!-- DISPLAY MAIN AREA -->
 <div class="container">
+
+  <!-- DISPLAY RECIPE CARDS -->
   <div class="row justify-content-center align-items-center mt-2">
 
     {% for t in title %}
     <!-- FIX RESPONSIVENESS -->
     <div id="recipe-display" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 my-2">
-      <div class="card" style="width: 100%;">
+
+      <div class="card ui fluid card" style="width: 100%;">
+
         <img src="{{t.image}}" class="card-img-top" alt="...">
+
         <div class="card-body">
-          <h5 class="card-title">{{t.title}}</h5>
-          <p class="card-text">Some quick example text toup the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-info">Go somewhere</a>
+          <h5 style="font-size: 1em;" class="card-title">{{t.title}}</h5>
+
+          <div class="card-body">
+
+            <p class="card-text my-0">Prep Time: 10min</p>
+            <p class="card-text my-0">Serves: 6</p>
+
+            <!-- show link to original webpage -->
+            <a href="#" target="_blank" class="card-text mb-1 d-block text-center"><small class="text-muted">View
+                original</small></a>
+            <!-- end showlink -->
+
+          </div>
+
+          <!-- FAVORITES ICON -->
+          <form id="favorite-form" class="favorite-form d-inline">
+            <a href="#" class="btn btn-info">Go somewhere</a>
+
+            <!-- IF ELSE STATEMENT GOES HERE -->
+            <button style="float: right;" data-id="" class='btn btn-sm'><span><i
+                  class="fas fa-2x fa-heart"></i></span></button>
+            <!-- ELSE -->
+            <button style="float: right;" data-id="" class='btn btn-sm'><span><i
+                  class="far fa-2x fa-heart"></i></span></button>
+            <!-- END IF ELSE -->
+
+          </form>
+          <!-- END FAVORITES -->
+
         </div>
+
       </div>
+
     </div>
     {% endfor %}
-
   </div>
+
+
+  <!-- DISPLAY PAGINATION (NEED TO FIX) -->
   <ul class="pagination justify-content-center">
     <li class="page-item">
       <a class="page-link" href="#" aria-label="Previous">
@@ -74,6 +111,8 @@
       </a>
     </li>
   </ul>
+
+
 </div>
 
 <!-- EXAMPLE -->

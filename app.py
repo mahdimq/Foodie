@@ -145,15 +145,15 @@ def homepage():
     # print(data)
     # print("###########################")
 
-    if len(data['recipes']) == 0:
-        return (jsonify(data=data), 200)
+    # if len(data['recipes']) == 0:
+    #     return (jsonify(data=data), 200)
 
-    return (jsonify(data=data), 200)
+    # return (jsonify(data=data), 200)
 
-    # # temp recipe population
-    # r_title = [r for r in recipe]
-    # diet = [d for d in diets]
-    # return render_template("index.html", title=r_title, diets=diet)
+    # temp recipe population
+    r_title = [r for r in recipe]
+    diet = [d for d in diets]
+    return render_template("index.html", title=r_title, diets=diet)
 
 
 # ################## USER DETAILS BASIC ###################
