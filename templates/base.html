@@ -5,12 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://kit.fontawesome.com/d240c4c1b9.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+  <!-- <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css"> -->
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/style.css">
-  <title>{% block title %}{% endblock %}</title>
+
+  <title>{% block title %}
+    <!--CAPSTONE ONE-->{% endblock %}</title>
 </head>
 
 <body>
@@ -23,12 +25,32 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
       <!-- ADD ACTION FOR RECIPE SEARCH -->
-      <form class="navbar-form col-md-6 col-sm-8 mx-auto my-2" role="search">
+      <form action="/search" class="navbar-form col-md-6 col-sm-8 mx-auto my-2" role="search">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search" name="query" id="srch-term">
-          <div class="input-group-btn">
-            <button class="btn btn-outline-info" type="submit"><i class="fas fa-search"></i></button>
+
+          <!-- SPLITTER IN SEARCH BAR -->
+          <select class="custom-select" name="diet" id="diet">
+            <option selected> <span class="text-muted">Diets</span> </option>
+            {% for diet in g.diets %}
+            <option value="{{diet}}">{{ diet.capitalize() }}</option>
+            {% endfor %}
+          </select>
+
+          <!-- SPLITTER IN SEARCH BAR -->
+          <select class="custom-select" name="cuisine" id="cuisine" data-container="body">
+            <option selected> <span class="text-muted">Cuisines</span> </option>
+            {% for cuisine in g.cuisines %}
+            <option value="{{cuisine}}">{{ cuisine.capitalize() }}</option>
+            {% endfor %}
+          </select>
+
+          <!-- BUTTON -->
+          <input data-id="{{g.user.id}}" type="text" class="form-control" placeholder="Search" name="query" id="query">
+          <div class="input-group-btn input-group-append">
+            <button data-id="{{g.user.id}}" class="btn btn-outline-info" type="submit"><i
+                class="fas fa-search"></i></button>
           </div>
         </div>
       </form>

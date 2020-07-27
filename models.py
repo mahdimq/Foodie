@@ -88,12 +88,14 @@ class Recipe(db.Model):
     """ Recipe Model """
     __tablename__ = 'recipes'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
     sourceName = db.Column(db.String)
     sourceUrl = db.Column(db.String)
+    readyInMinutes = db.Column(db.Integer)
+    servings = db.Column(db.Integer)
 
     def __repr__(self):
         return f'<Recipe=  title:{self.title}, source_name:{self.sourceName}>'
@@ -105,51 +107,8 @@ class Recipe(db.Model):
             'title': self.title,
             'img_url': self.image,
             'source_name': self.sourceName,
-            'source_url': self.sourceUrl
+            'source_url': self.sourceUrl,
+            'prep_time': self.readyInMinutes,
+            'serves': self.servings
         }
 
-
-# class Ingredient(db.Model):
-#     """ Ingredient Model """
-
-#     __tablename__ = 'ingredients'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String, nullable=False, unique=True)
-
-#     def __repr__(self):
-#         return f'<Ingredient: {self.name}>'
-
-#     def serialize(self):
-#         """ Serialize Ingredient instance for JSON """
-#         return {
-#             'id': self.id,
-#             'name': self.name,
-#         }
-
-
-# class Step(db.Model):
-#     """ Step Model """
-
-#     __tablename__ = 'steps'
-
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
-#     number = db.Column(db.Integer)
-#     step = db.Column(db.String)
-
-#     def __repr__(self):
-#         return f'<Step: {self.number} - {self.step}>'
-
-#     def show_step(self):
-#         """ returns a string of the step number and instructions """
-#         return f"{self.number}. {self.step}"
-
-#     def serialize(self):
-#         """ Serialize Ingredient instance for JSON """
-#         return {
-#             'id': self.id,
-#             'recipe_id': self.recipe_id,
-#             'number': self.number,
-#             'step': self.step
-#         }
