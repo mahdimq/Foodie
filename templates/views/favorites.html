@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Favorites{% endblock %}
+
+{% block content %}
+
+
+<!-- DISPLAY MAIN AREA -->
+<div class="container">
+
+  <!-- DISPLAY RECIPE CARDS -->
+  <div class="row justify-content-center align-items-center mt-2">
+
+    {% for r in recipes %}
+    <!-- FIX RESPONSIVENESS -->
+    <div id="recipe-display" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 my-2">
+
+      <div class="card ui fluid card" style="width: 100%;">
+
+        <a style="text-decoration: none; color: black; " href='#'>
+          <img src="{{r.image}}" class="card-img-top" alt="{{r.label}}">
+
+          <div class="card-body">
+            <h5 class="card-label">{{r.label}}</h5>
+
+            <div class="card-body">
+              {% if r.totalTime | float > 0 %}
+              <p class="card-text my-0">Prep Time: {{r.totalTime}} minutes</p>
+              {% endif %}
+              <p class="card-text my-0">Serves: {{r.yield}}</p>
+
+              <!-- show link to original webpage -->
+              <a href="{{r.url}}" target="_blank" class="card-text mb-1 d-block text-center"><small
+                  class="text-muted">{{r.source}}</small></a>
+              <!-- end showlink -->
+
+            </div>
+
+
+            <!-- FAVORITES ICON -->
+
+            <!-- <form id="favorites-form" class="d-inline">
+              IF ELSE STATEMENT GOES HERE
+              <button style="float: right;" data-id="{{r.id}}" class='btn btn-sm'><span><i
+                    class="fas fa-2x fa-heart"></i></span></button>
+              ELSE
+              <button style="float: right;" data-id="{{r.id}}" class='btn btn-sm'><span><i
+                    class="far fa-2x fa-heart"></i></span></button>
+              END IF ELSE
+
+            </form> -->
+
+            <!-- END FAVORITES -->
+
+          </div>
+        </a>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+
+  <!-- DISPLAY PAGINATION (NEED TO FIX) -->
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+
+
+</div>
+
+<!-- EXAMPLE -->
+
+
+{% endblock %}

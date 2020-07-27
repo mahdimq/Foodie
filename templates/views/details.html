@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Details{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div style="opacity: 0.9;" class="jumbotron mt-4">
+    <!-- {% for r in recipes %} -->
+    <h1 class="display-3 text-info">{{recipes.title}}</h1>
+    <p class="lead">summary goes here </p>
+    <hr>
+    <div class="row justify-content-center">
+
+      <div class="col-md-6 col-lg-8 mt-2">
+        <img class="recipe-img" src="{{recipes.image}}" alt="{{recipes.title}}">
+        <small><a href="{{recipes.sourceUrl}}" class="text-muted text-center text-uppercase">Recipe from
+            {{recipes.sourceName}}</a></small>
+      </div>
+
+      <div class="col-md-6 col-lg-4 mt-2">
+        <div class="info-list">
+          <ul>
+
+            <li class="lead my-1">Ready in: {{recipes.readyInMinutes}} minutes</li>
+
+            <li class="lead my-1">Serves: {{recipes.servings}}</li>
+          </ul>
+          <div>
+            <ul>
+              {% if recipes.vegetarian %}
+              <li class="text-info">Vegetarian</li>
+              {% endif %}
+
+              {% if recipes.vegan %}
+              <li class="text-info">Vegan</li>
+              {% endif %}
+
+              {% if recipes.glutenFree %}
+              <li class="text-info">Gluten free</li>
+              {% endif %}
+
+              {% if recipes.dairyFree %}
+              <li class="text-info">Dairy free</li>
+              {% endif %}
+
+              {% if recipes.sustainable %}
+              <li class="text-info">Sustainable</li>
+              {% endif %}
+
+              {% if recipes.ketogenic %}
+              <li class="text-info">Ketogenic</li>
+              {% endif %}
+
+              {% if recipes.whole30 %}
+              <li class="text-info">Whole30</li>
+              {% endif %}
+              <!-- END DIETS -->
+            </ul>
+
+            <hr>
+
+            <ul>
+
+              {% if recipes.veryHealthy %}
+              <li><i class="fas fa-heartbeat text-danger"></i> Healthy</li>
+              {% endif %}
+
+              {% if recipes.veryPopular %}
+              <li><i class="fas fa-fire text-warning"></i> Popular</li>
+              {% endif %}
+
+            </ul>
+
+          </div>
+          <!-- FAVORITES ICON -->
+
+          <!-- <form id="favorites-form" class="d-inline">
+                            IF ELSE STATEMENT GOES HERE
+                            <button style="float: right;" data-id="{{recipes.id}}" class='btn btn-sm'><span><i
+                                  class="fas fa-2x fa-heart"></i></span></button>
+                            ELSE
+                            <button style="float: right;" data-id="{{recipes.id}}" class='btn btn-sm'><span><i
+                                  class="far fa-2x fa-heart"></i></span></button>
+                            END IF ELSE
+
+                          </form> -->
+
+          <!-- END FAVORITES -->
+        </div>
+      </div>
+
+      <!-- INGREDIENTS AND  PORTION -->
+
+      <!-- INGREDIENTS -->
+
+      <div class="col-md-6 col-lg-5">
+        <h3 class="text-center recipe-subtitle">Ingredients</h3>
+        <ul class="list-group list-group-flush text-center">
+
+          {% for i in recipes.extendedIngredients %}
+          <li data-id="{{i.id}}">{{i.original}}</li>
+          <br>
+          {% endfor %}
+
+        </ul>
+      </div>
+
+
+      <!-- STEPS -->
+
+      <div class="col-md-6 col-lg-7">
+        <h3 class="text-center recipe-subtitle">Steps</h3>
+        <ul class="list-group list-group-flush text-center">
+          {% for recipe in recipes.analyzedInstructions %}
+
+          {% if recipe.name %}
+          <P>{{recipe.name}}</P>
+          {% endif %}
+
+          {% if recipe.steps %}
+          {% for s in recipe.steps %}
+          <li>{{s.step}}</li>
+          <br>
+          {% endfor %}
+
+          {% elif recipe.instructions %}
+          <p class="instructions">{{ recipe.instructions.replace('.', '. \n \n') }}</p>
+
+          {% else %}
+          <p class="">Sorry!</p>
+          <p class="">We can't find any instructions for this recipe!</p>
+          {% endif %}
+
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <!-- <a class="btn btn-info btn-lg" href="#" role="button">Print</a> -->
+  </div>
+
+  <!-- {% endfor %} -->
+
+</div>
+
+
+
+{% endblock %}
