@@ -1,13 +1,13 @@
 import os
-from flask import Flask, render_template, redirect, request, g, flash, session, jsonify
+from flask import Flask, render_template, redirect, request, g, flash, session, jsonify, make_response
 from models import db, connect_db, User, Recipe, Favorite
-from secret import key, key2
-from forms import SignupForm, LoginForm, EditUserForm, RecipeForm
+from secret import key, key2, key3
+from forms import SignupForm, LoginForm, EditUserForm
 from sqlalchemy.exc import IntegrityError
 import requests
 
 # ##### TEMP DATA ########
-from users import recipe, diets, results, info
+from users import recipe, diets, results, details, ids
 
 # ######################
 
@@ -24,7 +24,8 @@ connect_db(app)
 
 # #################### SPOONACULAR API INFO ########################
 BASE_URL = "https://api.spoonacular.com/recipes"
-API_KEY = key2
+API_KEY = key3
+
 # ########################## USER SESSION ##########################
 CURR_USER = "user_id"
 
@@ -104,6 +105,7 @@ def signup():
         #     db.session.commit()
 
         ##################################################
+
 
         # ADD USER TO SESSION
         # session[CURR_USER] = new_user.id
@@ -205,7 +207,7 @@ def update_user(id):
     if form.validate_on_submit():
         user.username = form.username.data
         user.email = form.email.data
-        user.img_url = form.img_url.data
+        user.img_url = form.img_url.data or None
 
         db.session.commit()
         flash('Changes successfully made to account', 'info')
@@ -228,23 +230,16 @@ def homepage():
     """Show home page with or without auth
     auto populate it with random recipes """
     # SPOONACULAR ENDPOINT
-    res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 9 })
+    res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 1 })
 
-    # EDAMAM ENDPOINT
-    # res = requests.get(f"{BASE_URL}", params={ "app_id": APP_ID, "app_key": APP_KEY, "to": 9, "q": "grilled steak" })
+    # result = recipe
+    # result = [r for r in recipe['results']]
 
     data = res.json()
-
-    # EDAMAM
-    # recipes = [r['recipe'] for r in data['hits']]
-
-    # return jsonify(recipes)
-
-    # SPOONACULAR
     recipes = data['recipes']
 
-    # Temp data from users.py
-    # recipes = [r['recipe'] for r in results['hits']]
+    # session['recipes'] = recipes
+    # return jsonify(data)
     return render_template("index.html", recipes=recipes)
 
 
@@ -252,16 +247,19 @@ def homepage():
 @app.route("/<diet>")
 def show_diets(diet):
     """Show recipes by diets"""
-    res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "number": 9 })
+    res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "number": 1 })
 
     data = res.json()
+
     recipes = data['results']
-    return render_template("index.html", recipes=recipes)
+
+    recipe_ids = [recipe.id for recipe in g.user.recipes]
+    # return jsonify(data)
+    return render_template("index.html", recipes=recipes, recipe_ids=recipe_ids)
 
 
 # ########################################################################
 # ========= SEARCH FOR A RECIPE WITH CUISINE AND DIETS TEST ROUTES ========
-
 
 
 
@@ -274,15 +272,7 @@ def search_recipe():
     query = request.args.get('query', "")
     cuisine = request.args.get('cuisine', "")
     diet = request.args.get('diet', "")
-    number = 5
-
-    # EDAMAM ENDPOINT
-    # if request.args:
-    #     response = requests.get(f"{BASE_URL}", params={ "app_id": APP_ID, "app_key": APP_KEY, "to": to, "q": query, "cuisineType": cuisine, "diet": diet })
-    #     data = response.json()
-
-        # if len(data['hits']) == 0:
-        #     return (jsonify(data=data), 200)
+    number = 3
 
 
     # SPOONACULAR ENDPOINT
@@ -294,8 +284,14 @@ def search_recipe():
             return (jsonify(data=data), 200)
 
     recipes = data['results']
-    # return jsonify(data=data), 200
-    return render_template("index.html", recipes=recipes)
+
+
+    # TEMP CHANGES
+    user_favorites = [fav.id for fav in g.user.recipes]
+    favorites = [r['id'] for r in recipes if r['id'] in user_favorites]
+    # response_json = jsonify(data=data, favorites=favorites)
+    # return jsonify(data=data, favorites=favorites), 200
+    return render_template("index.html", recipes=recipes, favorites=favorites)
 
 
 # ########################################################################
@@ -307,31 +303,133 @@ def search_recipe():
 def show_recipe(id):
     """Show recipe details"""
     # SPOONACULAR ENDPOINT
-    # res = requests.get(f"{BASE_URL}/{id}/information?includeNutrition=false", params={ "apiKey": API_KEY })
-    res = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?includeNutrition=false", params={ "apiKey": API_KEY })
-
-    # EDAMAM ENDPOINT
-    # r_id = requests.utils.quote(uri)
-    # res = requests.get(f"{BASE_URL}", params={ "app_id": APP_ID, "app_key": APP_KEY, "r": r_id })
-    # res = requests.get("https://api.edamam.com/search?app_id=1bfa73e6&app_key=59669656fdf109339b840b29caad7d34&r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_b66666d5c882ca199f43def8f1b8a03f")
-
-    # recipes = [r['recipe'] for r in data['hits']]
-    # return url
-    # return render_template("index.html", recipes=recipes)
+    res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
 
     data = res.json()
     # recipes = [r for r in data]
 
-    # return jsonify(recipes)
-    return render_template("views/details.html", recipes=data)
+    return jsonify(data)
+    # return render_template("views/details.html", recipes=data)
+
+
+# #################### FAVORITE RECIPE ####################
+# HELPER FUNCTION
+def add_recipe(recipe):
+
+    id = recipe.get('id', None)
+    title = recipe.get('title', None)
+    image = recipe.get('image', None)
+    sourceName = recipe.get('sourceName', None)
+    sourceUrl = recipe.get('sourceUrl', None)
+    readyInMinutes = recipe.get('readyInMinutes', None)
+    servings = recipe.get('servings', None)
+
+    favorite_recipe = Recipe(id=id, title=title, image=image, sourceName=sourceName, sourceUrl=sourceUrl, readyInMinutes=readyInMinutes, servings=servings)
+    # favorite_recipe = Favorite(user_id=g.user.id, recipe_id=id)
+    try:
+        db.session.add(favorite_recipe)
+        db.session.commit()
+        print("###########################")
+        print("RECIPE FAVORITED")
+        print("###########################")
+    except Exception:
+        db.session.rollback()
+        print(str(Exception))
+        print("###########################")
+        print("THIS IS AN EXCEPTION")
+        print("###########################")
+        # import pdb; pdb.set_trace()
+        return "Error in saving recipe. Please try again."
+    return favorite_recipe
+
+# #################### FAVORITE RECIPE ####################
+
+@app.route("/api/favorite/<int:id>", methods=["POST"])
+def favorite_recipe(id):
+    """Add to favorites"""
+
+    if not g.user:
+        flash("Please login to add recipe to favorites", "danger")
+        return redirect("/login")
+        # return abort(401)
+
+    recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
+
+    # #####TEMP##########
+
+    if not recipe:
+    # if not favorite_recipe:
+        res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
+        data = res.json()
+        # import pdb; pdb.set_trace()
+        recipe = add_recipe(data)
+
+        g.user.recipes.append(recipe)
+        print("###########################")
+        print("RECIPE FAVORITED")
+        print("###########################")
+        db.session.commit()
+
+    else:
+        g.user.recipes.append(recipe)
+        print("###########################")
+        print("RECIPE FAVORITED")
+        print("###########################")
+        db.session.commit()
+
+    response_json = jsonify(recipe=recipe.serialize(), message="Recipe Added!")
+    return (response_json, 200)
+
+
+
+# ########################### DELETE FAVORITE HTML ##################################
+
+@ app.route('/api/favorite/<int:id>', methods=['DELETE'])
+def remove_favorite(id):
+    """ Unfavorite a recipe """
+    if not g.user:
+        flash("Please login to remove recipe from favorites", "danger")
+        return redirect("/login")
+
+    try:
+        # recipe = Recipe.query.filter_by(id=id).first()
+        recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
+        db.session.delete(recipe)
+        print("###########################")
+        print("RECIPE REMOVED")
+        print("###########################")
+        db.session.commit()
+
+        response_json = jsonify(recipe=recipe.serialize(), message="Recipe removed!")
+        return (response_json, 200)
+
+    except Exception as e:
+        print("###########################")
+        print("RECIPE ERROR", e)
+        print("###########################")
+        print(str(e))
+        return jsonify(errors=str(e))
 
 # ########################### TEMP DATA FROM USERS TO FIX HTML ##################################
+# SHOW FAVORITES ###########################
 
-# @app.route("/users/<string>")
-# def details(string):
+@app.route("/favorites")
+def show_favorites():
+    """show favorited recipes"""
 
-#     return render_template("/views/details.html", recipes=info)
+    if not g.user:
+        flash("you must be logged in to view favorites", "danger")
+        return redirect("/login")
 
+
+    # TEMP #######
+    favorites = Favorite.query.filter_by(user_id=g.user.id).all()
+    # TEMP #######
+
+
+    # recipe_ids = [recipe.id for recipe in g.user.recipes]
+
+    return render_template("views/favorites.html", recipe_ids = favorites)
 
 
 # ##################### ERROR 404 PAGE ######################
@@ -341,4 +439,17 @@ def page_not_found(error):
     """Show 404 ERROR page if page NOT FOUND"""
 
     return render_template("error.html"), 404
+
+
+# ##################### AFTER REQUESTS ######################
+
+@app.after_request
+def add_header(req):
+    """Add non-caching headers on every request."""
+
+    req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    req.headers["Pragma"] = "no-cache"
+    req.headers["Expires"] = "0"
+    req.headers["Cache-Control"] = "public, max-age=0"
+    return req
 

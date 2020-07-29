@@ -24,7 +24,3 @@ class EditUserForm(FlaskForm):
     # password = PasswordField("Password", validators=[InputRequired(message="Password required")])
     email = StringField("E-mail", validators=[InputRequired(), Email()])
     img_url = URLField('Profile Image (optional)', validators=[Optional()])
-
-class RecipeForm(FlaskForm):
-    """Recipe search form"""
-    query = StringField("Search")

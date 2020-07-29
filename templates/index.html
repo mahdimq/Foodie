@@ -29,27 +29,7 @@
 <!-- DIET TYPE AREA -->
 
 <div class="diets">
-  {% for d in [
-  {
-  'name': 'Pescetarian',
-  'image': "https://tinyurl.com/y5c4yu2q"
-  },
-  {
-  'name': 'Lacto-Vegatarian',
-  'image': "https://tinyurl.com/y3wuwzr2"
-  },
-  {
-  'name': 'Ovo-Vegetarian',
-  'image': "https://tinyurl.com/yxtut8pn"
-  },
-  {
-  'name': 'Vegan',
-  'image': "https://tinyurl.com/y2x72gto"
-  },
-  {
-  'name': 'Vegetarian',
-  'image': "https://tinyurl.com/y55rcmnz"
-  },] %}
+  {% for d in [{'name': 'Pescetarian','image': "https://tinyurl.com/y5c4yu2q"},{'name': 'Lacto-Vegatarian','image': "https://tinyurl.com/y3wuwzr2"},{'name': 'Ovo-Vegetarian','image': "https://tinyurl.com/yxtut8pn"},{'name': 'Vegan','image': "https://tinyurl.com/y2x72gto"},{'name': 'Vegetarian','image': "https://tinyurl.com/y55rcmnz"},] %}
   <div class="diet">
     <a class="diet-link" href="/{{d.name}}">
       <img class='diet-img' src="{{d.image}}" alt="{{d.name}}">
@@ -66,19 +46,21 @@
 <div class="container">
 
   <!-- DISPLAY RECIPE CARDS -->
-  <div class="row justify-content-center align-items-center mt-2">
+  <div>
+    <div id="recipe-display" class="row justify-content-center align-items-center mt-2">
+      {% for r in recipes %}
 
-    {% for r in recipes %}
-    <!-- FIX RESPONSIVENESS -->
-    <div id="recipe-display" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 my-2">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 col-xl-4 my-2">
 
-      <div class="card ui fluid card" style="width: 100%;">
 
-        <a style="text-decoration: none; color: black; " href='/recipe/{{r.id}}'>
+
+        <div class="card ui fluid card" style="width: 100%;">
+
           <img src="{{r.image}}" class="card-img-top" alt="{{r.title}}">
 
           <div class="card-body">
             <h5 class="card-label">{{r.title}}</h5>
+            <!-- <h4>{{r.id}}</h4> -->
 
             <div class="card-body">
 
@@ -91,49 +73,49 @@
               <!-- end showlink -->
 
             </div>
-
-
+            <a class="btn btn-info" href='/recipe/{{r.id}}'>Show Recipe</a>
             <!-- FAVORITES ICON -->
 
-            <form id="favorites-form" class="d-inline">
-              <!-- IF ELSE STATEMENT GOES HERE -->
-              <button style="float: right;" data-id="{{r.id}}" class='btn btn-sm'><span><i
-                    class="fas fa-2x fa-heart"></i></span></button>
-              <!-- ELSE -->
-              <button style="float: right;" data-id="{{r.id}}" class='btn btn-sm'><span><i
-                    class="far fa-2x fa-heart"></i></span></button>
-              <!-- END IF ELSE -->
 
-            </form>
+            <!-- <form id="favorites-form" class="d-inline" methods='POST'> -->
+            {% if r.id in g.user.favorites %}
+            <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
+                class="fas fa-heart fa-2x"></i></button>
+            {% else %}
+            <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
+                class="far fa-heart fa-2x"></i></button>
+            {% endif %}
+            <!-- </form> -->
+
+            <!-- <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
+                class="{% if r.id in g.user.favorites %}far fa-heart fa-2x {% else %}fas fa-heart fa-2x {% endif %}"></i></button> -->
 
             <!-- END FAVORITES -->
 
           </div>
-        </a>
+        </div>
+
       </div>
-
+      {% endfor %}
     </div>
-    {% endfor %}
+
+    <!-- DISPLAY PAGINATION (NEED TO FIX) -->
+    <ul id="page-ul" class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item"><button class="page-link" href="#">1</button></li>
+      <li class="page-item"><button class="page-link" href="#">2</button></li>
+      <li class="page-item"><button class="page-link" href="#">3</button></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
   </div>
-
-
-  <!-- DISPLAY PAGINATION (NEED TO FIX) -->
-  <ul class="pagination justify-content-center">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-
 
 </div>
 

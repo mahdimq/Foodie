@@ -75,7 +75,7 @@ class Favorite(db.Model):
     __tablename__ = "favorites"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"), primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete='CASCADE'), primary_key=True)
     date = db.Column(db.DateTime, default=datetime.datetime.now())
 
@@ -89,7 +89,6 @@ class Recipe(db.Model):
     __tablename__ = 'recipes'
 
     id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
     sourceName = db.Column(db.String)
@@ -112,3 +111,4 @@ class Recipe(db.Model):
             'serves': self.servings
         }
 
+# , default="https://tinyurl.com/y5phz2pk"
