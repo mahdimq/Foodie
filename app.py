@@ -102,16 +102,6 @@ def signup():
         flash("Thank you for registering", "warning")
         # flash("Thank you for registering", "warning")
         return redirect(f"/users/{new_user.id}")
-        #     db.session.commit()
-
-        ##################################################
-
-
-        # ADD USER TO SESSION
-        # session[CURR_USER] = new_user.id
-        # flash("Thank you for registering", "warning")
-
-        # return redirect(f"/users/{new_user.id}")
 
     return render_template('/users/signup.html', form=form)
 
@@ -156,7 +146,6 @@ def logout():
 
 # #################### DELETE USER ROUTE ####################
 
-# ============= NEED TO USE DELETE METHOD =============
 @app.route("/users/<int:id>/delete", methods=["POST"])
 def delete_user(id):
     """Delete user."""
@@ -191,7 +180,8 @@ def show_user(id):
     return render_template("/users/profile.html", user=user)
 
 
-# ========= NEED TO USE PATCH METHOD =========
+# ################### UPDATE USER DETAILS ####################
+
 @app.route("/users/<int:id>/update", methods=["GET", "POST"])
 def update_user(id):
     """Show user update form and redirect to users page"""
@@ -224,33 +214,38 @@ def update_user(id):
 
 # ################### HOME PAGE BASIC ###################
 
-# ======= GET RANDOM RECIPES ========
 @app.route("/")
 def homepage():
+    """show homepage modal explaining website"""
+
+    return render_template("home.html")
+
+# ======= GET RANDOM RECIPES ========
+@app.route("/recipes")
+def show_recipes():
     """Show home page with or without auth
     auto populate it with random recipes """
     # SPOONACULAR ENDPOINT
-    res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 1 })
+    # res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 1 })
 
-    # result = recipe
-    # result = [r for r in recipe['results']]
+    # data = res.json()
+    print("###########################")
+    # print(data)
+    print("###########################")
+    # recipes = data['recipes']
 
-    data = res.json()
-    recipes = data['recipes']
 
-    # session['recipes'] = recipes
     # return jsonify(data)
-    return render_template("index.html", recipes=recipes)
+    return render_template("index.html", recipes=recipe)
 
 
 # ======= GET RECIPE BY DIET =========
-@app.route("/<diet>")
+@app.route("/recipes/<diet>")
 def show_diets(diet):
     """Show recipes by diets"""
     res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "number": 1 })
 
     data = res.json()
-
     recipes = data['results']
 
     recipe_ids = [recipe.id for recipe in g.user.recipes]
@@ -274,7 +269,6 @@ def search_recipe():
     diet = request.args.get('diet', "")
     number = 3
 
-
     # SPOONACULAR ENDPOINT
     if request.args:
         res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "cuisine": cuisine, "query": query, "number": number })
@@ -285,37 +279,33 @@ def search_recipe():
 
     recipes = data['results']
 
-
     # TEMP CHANGES
-    user_favorites = [fav.id for fav in g.user.recipes]
-    favorites = [r['id'] for r in recipes if r['id'] in user_favorites]
-    # response_json = jsonify(data=data, favorites=favorites)
+    # user_favorites = [fav.id for fav in g.user.recipes]
+    # favorites = [r['id'] for r in recipes if r['id'] in user_favorites]
     # return jsonify(data=data, favorites=favorites), 200
-    return render_template("index.html", recipes=recipes, favorites=favorites)
+    return render_template("index.html", recipes=recipes)
+    # return render_template("index.html", recipes=recipes, favorites=favorites)
 
 
-# ########################################################################
+# ####################### SHOW RECIPES DETAILS ######################
 
-
-# ####################### SHOW RECIPES ######################
-
-@app.route("/recipe/<int:id>")
+@app.route("/recipes/<int:id>")
 def show_recipe(id):
     """Show recipe details"""
     # SPOONACULAR ENDPOINT
-    res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
+    # res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
 
-    data = res.json()
+    # data = res.json()
     # recipes = [r for r in data]
 
-    return jsonify(data)
+    return jsonify(details)
     # return render_template("views/details.html", recipes=data)
 
 
 # #################### FAVORITE RECIPE ####################
 # HELPER FUNCTION
 def add_recipe(recipe):
-
+    """Add recipe to favorites tables in the DB"""
     id = recipe.get('id', None)
     title = recipe.get('title', None)
     image = recipe.get('image', None)
@@ -325,7 +315,7 @@ def add_recipe(recipe):
     servings = recipe.get('servings', None)
 
     favorite_recipe = Recipe(id=id, title=title, image=image, sourceName=sourceName, sourceUrl=sourceUrl, readyInMinutes=readyInMinutes, servings=servings)
-    # favorite_recipe = Favorite(user_id=g.user.id, recipe_id=id)
+
     try:
         db.session.add(favorite_recipe)
         db.session.commit()
@@ -334,9 +324,8 @@ def add_recipe(recipe):
         print("###########################")
     except Exception:
         db.session.rollback()
-        print(str(Exception))
         print("###########################")
-        print("THIS IS AN EXCEPTION")
+        print("THIS IS AN EXCEPTION", str(Exception))
         print("###########################")
         # import pdb; pdb.set_trace()
         return "Error in saving recipe. Please try again."
@@ -353,7 +342,8 @@ def favorite_recipe(id):
         return redirect("/login")
         # return abort(401)
 
-    recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
+    # recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
+    recipe = Favorite.query.filter_by(recipe_id=id).first()
 
     # #####TEMP##########
 
@@ -361,15 +351,17 @@ def favorite_recipe(id):
     # if not favorite_recipe:
         res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
         data = res.json()
+        print("###########################")
+        print("RECIPE :", data)
+        print("###########################")
         # import pdb; pdb.set_trace()
         recipe = add_recipe(data)
 
-        g.user.recipes.append(recipe)
+        CURR_USER.recipes.append(recipe)
         print("###########################")
         print("RECIPE FAVORITED")
         print("###########################")
         db.session.commit()
-
     else:
         g.user.recipes.append(recipe)
         print("###########################")
@@ -379,6 +371,9 @@ def favorite_recipe(id):
 
     response_json = jsonify(recipe=recipe.serialize(), message="Recipe Added!")
     return (response_json, 200)
+
+# ########################### DELETE FAVORITE HTML ##################################
+
 
 
 
@@ -424,6 +419,7 @@ def show_favorites():
 
     # TEMP #######
     favorites = Favorite.query.filter_by(user_id=g.user.id).all()
+
     # TEMP #######
 
 
@@ -453,3 +449,74 @@ def add_header(req):
     req.headers["Cache-Control"] = "public, max-age=0"
     return req
 
+################################ TEMP CODE ##################################
+#############################################################################
+#############################################################################
+#############################################################################
+#############################################################################
+
+# ==================================================
+# # VIEW ROUTES
+# # =============================================================
+
+# # ################### HOME PAGE BASIC ###################
+# @app.route("/")
+# def homepage():
+#     """Show home page with or without auth
+#     auto populate it with random recipes """
+#     if not g.user:
+#         return redirect('/login')
+#     # get user information from session
+#     user = g.user
+
+#     return render_template("home.html", user=user)
+
+# # ################### MAIN RECIPE PAGE ###################
+
+# @app.route("/recipes")
+# def view_recipes():
+#     """View random recipes"""
+#     # SPOONACULAR ENDPOINT
+#     # res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 1 })
+
+#     result = recipe
+#     # result = [r for r in recipe['results']]
+
+#     # data = res.json()
+#     # recipes = data['recipes']
+
+#     # session['recipes'] = recipes
+#     return render_template("index.html", recipes=result)
+
+# # ################### SEARCH RECIPE PAGE ###################
+
+# @app.route("/search")
+# def search_recipe():
+#     """Search by diets and cuisines"""
+#     if not g.user:
+#         return abort(401)
+
+#     query = request.args.get('query', "")
+#     cuisine = request.args.get('cuisine', "")
+#     diet = request.args.get('diet', "")
+#     offset = int(request.args.get('offset', 0))
+#     number = 3
+
+#     # SPOONACULAR ENDPOINT
+#     if request.args:
+#         res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "cuisine": cuisine, "query": query, "number": number })
+#         data = res.json()
+
+#         if len(data['results']) == 0:
+#             return (jsonify(data=data), 200)
+
+#     user_favorites = [f.id for f in g.user.recipes]
+#     favorites = [r['id'] for r in data['results'] if r['id'] in user_favorites]
+#     response_json = jsonify(data=data, favorites=favorites)
+
+#     return (response_json, 200)
+
+#############################################################################
+#############################################################################
+#############################################################################
+#############################################################################

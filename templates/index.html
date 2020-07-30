@@ -4,49 +4,28 @@
 
 {% block content %}
 
-<!-- CAROUSEL -->
-<!-- <div class="carousel" data-flickity='{ "wrapAround": false }'>
-  {% for t in diets %}
-  <img class="carousel-cell" src="{{r.image}}" alt="">
-  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/188719-312x231.jpg" alt="">
-  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/1057064-312x231.jpg" alt="">
-  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/590042-312x231.jpg" alt="">
-  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/737441-312x231.jpeg" alt="">
-  <img class="carousel-cell" src="https://spoonacular.com/recipeImages/590042-312x231.jpg" alt="">
-  {% endfor %}
-</div> -->
-
-<!-- CSS CAROUSEL -->
-<!-- <div class="carousel">
-  {% for d in diets %}
-  <div class="carousel-cell">
-    <img class='carousel-img' src="{{d.image}}" alt="">
-  </div>
-  {% endfor %}
-</div> -->
-
 
 <!-- DIET TYPE AREA -->
-
-<div class="diets">
-  {% for d in [{'name': 'Pescetarian','image': "https://tinyurl.com/y5c4yu2q"},{'name': 'Lacto-Vegatarian','image': "https://tinyurl.com/y3wuwzr2"},{'name': 'Ovo-Vegetarian','image': "https://tinyurl.com/yxtut8pn"},{'name': 'Vegan','image': "https://tinyurl.com/y2x72gto"},{'name': 'Vegetarian','image': "https://tinyurl.com/y55rcmnz"},] %}
-  <div class="diet">
-    <a class="diet-link" href="/{{d.name}}">
-      <img class='diet-img' src="{{d.image}}" alt="{{d.name}}">
-      <div class="txt">{{d.name}}</div>
-    </a>
+<div id="recipe-details">
+  <div class="diets">
+    {% for d in [{'name': 'Pescetarian','image': "https://tinyurl.com/y5c4yu2q"},{'name': 'Lacto-Vegatarian','image': "https://tinyurl.com/y3wuwzr2"},{'name': 'Ovo-Vegetarian','image': "https://tinyurl.com/yxtut8pn"},{'name': 'Vegan','image': "https://tinyurl.com/y2x72gto"},{'name': 'Vegetarian','image': "https://tinyurl.com/y55rcmnz"},] %}
+    <div class="diet">
+      <a class="diet-link" href="/recipes/{{d.name}}">
+        <img class='diet-img' src="{{d.image}}" alt="{{d.name}}">
+        <div class="txt">{{d.name}}</div>
+      </a>
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
-</div>
 
-<!-- END CAROUSEL -->
+  <!-- END CAROUSEL -->
 
 
-<!-- DISPLAY MAIN AREA -->
-<div class="container">
+  <!-- DISPLAY MAIN AREA -->
+  <div class="container">
 
-  <!-- DISPLAY RECIPE CARDS -->
-  <div>
+    <!-- DISPLAY RECIPE CARDS -->
+
     <div id="recipe-display" class="row justify-content-center align-items-center mt-2">
       {% for r in recipes %}
 
@@ -73,7 +52,7 @@
               <!-- end showlink -->
 
             </div>
-            <a class="btn btn-info" href='/recipe/{{r.id}}'>Show Recipe</a>
+            <button data-id="{{r.id}}" class="btn btn-info show-recipe">Show Recipe</button>
             <!-- FAVORITES ICON -->
 
 

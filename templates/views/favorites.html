@@ -30,20 +30,21 @@
               <p class="card-text my-0">Serves: {{r.servings}}</p>
 
               <!-- show link to original webpage -->
-              <a href="{{r.sourcUurl}}" target="_blank" class="card-text mb-1 d-block text-center"><small
+              <a href="{{r.sourceUrl}}" target="_blank" class="card-text mb-1 d-block text-center"><small
                   class="text-muted">{{r.sourceName}}</small></a>
               <!-- end showlink -->
 
             </div>
 
+            <button data-id="{{r.id}}" class="btn btn-info show-recipe">Show Recipe</button>
+
 
             <!-- FAVORITES ICON -->
-            <a class="btn btn-info" href='/recipe/{{r.id}}'>Show Recipe</a>
-
 
             <!-- <form id="favorites-form" class="d-inline" method='POST'> -->
 
             {% if r.id in g.user.favorites %}
+            <p>{{r.id}} - </p>
             <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
                 class="fas fa-heart fa-2x"></i></button>
             {% else %}
