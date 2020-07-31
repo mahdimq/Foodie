@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div>
+
+    <div class="jumbotron my-4 px-4">
+
+      <div class="row align-items-center">
+        <div class="col-sx-6 mx-3">
+          <img class="profile-pic" src="{{user.img_url}}" alt="">
+        </div>
+
+        <div class="col-xs-6 text-left">
+          <h1 class="display-4">{{user.username}}</h1>
+        </div>
+      </div>
+      <hr class="my-4">
+
+
+      <div class="row">
+        <div class="col">
+          <p class="lead">Username: {{user.username}}</p>
+          <p class="lead">Email: {{user.email}}</p>
+        </div>
+        <div class="col">
+          <p class="lead text-right"><a class="text-info" href="/favorites"><i class="fav fas fa-heart"></i> Favorites:
+              {{user.recipes | length}}</a></p>
+        </div>
+      </div>
+
+
+
+
+      <a class="btn btn-lg btn-warning" href="//users/{{user.id}}/delete" role="button">Delete</a>
+      <a class="btn btn-lg btn-info" href="/users/{{user.id}}/update" role="button">Edit</a>
+      <a class="btn btn-lg btn-info" href="/logout" role="button">Logout</a>
+
+    </div>
+  </div>
+
+</div>
+
+
+{% endblock %}

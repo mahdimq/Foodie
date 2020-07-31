@@ -182,12 +182,9 @@ class Favorite(db.Model):
     # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"), primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete='cascade'), primary_key=True)
-    date = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    def friendly_date(self):
-        """Create friendly date"""
-        date = self.created_at.strftime("%a %b %d %Y,  %-I:%M %p")
-        return date
+    def __repr__(self):
+        return f'<Favorite= user_id:{self.user_id} recipe_id:{self.recipe_id} >'
 
 
 class Recipe(db.Model):
@@ -205,7 +202,7 @@ class Recipe(db.Model):
     users = db.relationship('User', secondary="favorites", backref="recipes", lazy=True)
 
     def __repr__(self):
-        return f'<Recipe=  title:{self.title}, source_name:{self.sourceName}>'
+        return f'<Recipe= id:{self.id}, title:{self.title}, source_name:{self.sourceName}>'
 
     def serialize(self):
         """ Serialize Recipe instance for JSON """

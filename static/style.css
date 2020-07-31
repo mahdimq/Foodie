@@ -29,12 +29,18 @@ body {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-	/* min-width: 100%; */
-	/* height: auto; */
 	font-family: 'Avenir Light', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
 		Arial, sans-serif !important;
 }
 
+#print {
+	color: rgb(1, 102, 102);
+	font-size: 1.2em;
+}
+
+.jumbotron {
+	opacity: 0.95;
+}
 /* ############## USER DETAILS ############# */
 
 .profile-pic {
@@ -43,7 +49,53 @@ body {
 	border-radius: 50%;
 }
 
-/* ################ NAVBAR ############### */
+/* ################### NAVBAR ################ */
+/* ========== NAVBAR HAMBURGER MENU =========*/
+.icon-bar {
+	width: 22px;
+	height: 2px;
+	background-color: #b6b6b6;
+	display: block;
+	transition: all 0.2s;
+	margin-top: 4px;
+}
+
+.icon-bar:first-of-type {
+	margin-top: 0;
+}
+
+.navbar-toggler {
+	border: none;
+	background: transparent !important;
+}
+/* ================= ANIMATION =============== */
+.navbar-toggler .top-bar {
+	transform: rotate(45deg);
+	transform-origin: 10% 10%;
+}
+
+.navbar-toggler .middle-bar {
+	opacity: 0;
+}
+
+.navbar-toggler .bottom-bar {
+	transform: rotate(-45deg);
+	transform-origin: 10% 90%;
+}
+
+.navbar-toggler.collapsed .top-bar {
+	transform: rotate(0);
+}
+
+.navbar-toggler.collapsed .middle-bar {
+	opacity: 1;
+}
+
+.navbar-toggler.collapsed .bottom-bar {
+	transform: rotate(0);
+}
+
+/* ================ profile pic ============ */
 
 .nav-pic {
 	width: 35px;
@@ -52,45 +104,6 @@ body {
 	margin: none;
 	padding: none;
 }
-
-/* ########## CAROUSEL ############### */
-
-.carousel {
-	background-color: #d3d3d3;
-	/* padding: 1em; */
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	flex-wrap: nowrap; /* allow side scroll */
-	overflow-x: auto; /* allow side scroll */
-}
-.carousel-img {
-	width: auto;
-	height: 250px;
-	background-color: #d3d3d3;
-	/* border-radius: 50%; */
-	/* border: solid #d3d3d3 2px; */
-	background-size: cover;
-	background-position: center center;
-	margin-right: 5px;
-	margin-top: 5px;
-}
-
-/* COMMENT MARGIN BOTTOM OUT */
-
-/* .carousel {
-	background: #d3d3d3;
-	margin-bottom: 30px;
-	padding: 1em auto 2em;
-}
-
-.carousel-cell {
-	width: auto;
-	height: 250px;
-	margin-right: 10px;
-	margin-top: 10px;
-} */
 
 /* ############ DIET TYPES ############# */
 .diets {
@@ -106,11 +119,16 @@ body {
 .diet-img {
 	width: 100px;
 	height: 100px;
+	margin-bottom: 0.5em;
 	background-color: #d3d3d3;
 	border-radius: 50%;
-	border: solid #d3d3d3 2px;
+	/* border: solid #d3d3d3 2px; */
 	background-size: cover;
 	background-position: center center;
+	/* BOX SHADOW */
+	-webkit-box-shadow: 4px 4px 6px 0px rgba(112, 110, 112, 0.5);
+	-moz-box-shadow: 4px 4px 6px 0px rgba(112, 110, 112, 0.5);
+	box-shadow: 4px 4px 6px 0px rgba(112, 110, 112, 0.5);
 }
 
 .diet-link {
@@ -128,6 +146,7 @@ body {
 }
 
 .diet {
+	margin: auto;
 	width: 135px;
 	text-align: center;
 	align-content: space-between;
@@ -146,9 +165,13 @@ body {
 }
 
 /* ############## RECIPE DISPLAY ############# */
+.card {
+	max-width: 24rem;
+	max-height: 100%;
+}
 
 .recipe-img {
-	border-radius: 5px;
+	/* border-radius: 5px; */
 	width: 100%;
 }
 
@@ -166,6 +189,16 @@ body {
 }
 /* NEED TO ADD STYLING HERE */
 
+/* ############## FAV ICONS ############## */
+.fav {
+	color: tomato;
+}
+
+.fav:hover,
+.fav.active {
+	color: tomato;
+}
+
 /* ############### FOOTER ############## */
 
 ul {
@@ -173,13 +206,16 @@ ul {
 }
 
 a {
-	text-decoration: none;
+	text-decoration: none !important;
 	/* opacity: 0.6; */
-	color: #fff;
+	color: cadetblue;
 }
 
-a:hover {
+a:hover,
+a:active {
 	opacity: 0.9;
+	cursor: pointer;
+	color: #fff;
 }
 
 .footer {

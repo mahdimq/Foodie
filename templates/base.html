@@ -5,8 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://kit.fontawesome.com/d240c4c1b9.js" crossorigin="anonymous"></script>
-  <!-- <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script> -->
-  <!-- <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css"> -->
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/style.css">
@@ -18,16 +16,26 @@
 <body>
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Foodie</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+
+    <a class="navbar-brand" href="/recipes"><img class="nav-pic mr-1" src="/static/images/chef.jpg"
+        alt="chef icon">Foodie</a>
+
+    <!-- CUSTOM HAMBURGER MENU -->
+
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <span class="icon-bar top-bar"></span>
+      <span class="icon-bar middle-bar"></span>
+      <span class="icon-bar bottom-bar"></span>
     </button>
+
+    <!-- CUSTROM HAMBURGER  -->
+
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-      {% if g.user %}
-      <!-- ADD ACTION FOR RECIPE SEARCH (Removed Action = /search) -->
+
+      <!-- ADD ACTION FOR RECIPE SEARCH -->
       <form class="navbar-form col-md-6 col-sm-8 mx-auto my-2" id="search" action="/search" role="search">
         <div class="input-group">
 
@@ -48,14 +56,13 @@
           </select>
 
           <!-- BUTTON -->
-          <input data-id="{{g.user.id}}" type="text" class="form-control" placeholder="Search" name="query" id="query">
+          <input type="text" class="form-control" placeholder="Search" name="query" id="query">
           <div class="input-group-btn input-group-append">
-            <button data-id="{{g.user.id}}" class="btn btn-outline-info" type="submit"><i
-                class="fas fa-search"></i></button>
+            <button class="btn btn-outline-info" type="submit"><i class="fas fa-search"></i></button>
           </div>
         </div>
       </form>
-      {% endif %}
+
 
       <ul class="navbar-nav ml-auto">
         {% if session["user_id"] %}
@@ -66,10 +73,10 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
+          <a class="nav-link" href="/favorites">Favorites</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/favorites">Favorites</a>
+          <a class="nav-link" href="/logout">Logout</a>
         </li>
         {% else %}
         <li class="nav-item">
@@ -90,23 +97,17 @@
   {% endfor %}
 
   {% block content %}
-  <!-- <div class="container">
-
-    <h1 class="title">FOODIE</h1>
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iure necessitatibus iste repudiandae dicta?<a
-        href="#">foodie</a>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, doloremque.</p>
-
-  </div> -->
+  <!-- CONTENT GOES HERE -->
   {% endblock %}
 
   <!-- FOOTER -->
   <footer class="footer">
-    <p>Images courtesy of <a href="#">Foodie</a>.</p>
-    <p>Why are you even reading this?! There's never anything interesting in the footer!</p>
+    <p>Content & Information from <a href="https://spoonacular.com/food-api">Spoonacular API</a>.</p>
+    <p>Springboard Capstone Project One - July 2020</p>
     <ul>
-      <li><a href="#"><i class="fa fa-linkedin fa-2x" aria-hidden="true"></i></a></li>
-      <li><a href="#"><i class="fa fa-facebook fa-2x" aria-hidden="true"></i></a></li>
-      <li><a href="#"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a></li>
+      <li><a href="www.linkedin.com/in/muhammad-qadir"><i class="fa fa-linkedin fa-2x" aria-hidden="true"></i></a></li>
+      <li><a href="https://github.com/mahdimq/capstone-one"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a>
+      </li>
     </ul>
   </footer>
 
@@ -116,7 +117,6 @@
   <script src="https://unpkg.com/bootstrap"></script>
   <script src="https://unpkg.com/axios/dist/axios.js"></script>
   <script src="/static/app.js"></script>
-  <!-- <script src="/static/temp.js"></script> -->
 </body>
 
 </html>

@@ -3,11 +3,12 @@
 {% block title %}Details{% endblock %}
 
 {% block content %}
-<div class="container" id="recipe-details">
-  <div style="opacity: 0.9;" class="jumbotron mt-4">
+<div class="container">
+  {% if recipes %}
+  <div class="jumbotron mt-4">
 
-    <h1 class="display-3 text-info">{{recipes.title}}</h1>
-    <p class="lead">summary goes here </p>
+    <h1 class="display-4 text-info">{{recipes.title}}</h1>
+    <button id="print" class="btn btn-sm"><i class="fas fa-print"></i> - Print Recipe</button>
     <hr>
     <div class="row justify-content-center">
 
@@ -72,24 +73,9 @@
             </ul>
 
           </div>
-          <!-- FAVORITES ICON -->
 
-          <!-- <form id="favorites-form" class="d-inline">
-                            IF ELSE STATEMENT GOES HERE
-                            <button style="float: right;" data-id="{{recipes.id}}" class='btn btn-sm'><span><i
-                                  class="fas fa-2x fa-heart"></i></span></button>
-                            ELSE
-                            <button style="float: right;" data-id="{{recipes.id}}" class='btn btn-sm'><span><i
-                                  class="far fa-2x fa-heart"></i></span></button>
-                            END IF ELSE
-
-                          </form> -->
-
-          <!-- END FAVORITES -->
         </div>
       </div>
-
-      <!-- INGREDIENTS AND  PORTION -->
 
       <!-- INGREDIENTS -->
 
@@ -138,6 +124,15 @@
     </div>
     <!-- <a class="btn btn-info btn-lg" href="#" role="button">Print</a> -->
   </div>
+
+  {% else %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Sorry! Unable to retrieve recipe Details</h1>
+      <a href="/" class="btn btn-info btn-lg">Back</a>
+    </div>
+  </div>
+  {% endif %}
 
 </div>
 

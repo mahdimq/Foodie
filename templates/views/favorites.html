@@ -7,98 +7,97 @@
 
 <!-- DISPLAY MAIN AREA -->
 <div class="container">
-  <div>
-    {% if g.user.recipes %}
-    <!-- DISPLAY RECIPE CARDS -->
+  {% if g.user.recipes %}
+  <!-- DISPLAY RECIPE CARDS -->
 
-    <div id="recipe-display" class="row justify-content-center align-items-center mt-2">
-      {% for r in g.user.recipes %}
-      <!-- FIX RESPONSIVENESS -->
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 my-2">
+  <div id="recipe-display" class="row justify-content-center align-items-center mt-2">
+    {% for r in g.user.recipes %}
+    <!-- FIX RESPONSIVENESS -->
+    <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 my-2"> -->
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 col-xl-4 my-2">
 
-        <div class="card ui fluid card" style="width: 100%;">
+      <div class="card border mb-2 mx-auto p-1">
 
+        <img src="{{r.image}}" class="card-img-top" alt="{{r.title}}">
 
-          <img src="{{r.image}}" class="card-img-top" alt="{{r.title}}">
+        <div class="card-body">
+          <h5 class="card-label d-inline">{{r.title}}</h5>
 
-          <div class="card-body">
-            <h5 class="card-label">{{r.title}}</h5>
+          <div class="card-body 2">
 
-            <div class="card-body">
+            <p class="card-text mb-0">Prep Time: {{r.readyInMinutes}} minutes</p>
+            <p class="card-text">Serves: {{r.servings}}</p>
 
-              <p class="card-text my-0">Prep Time: {{r.readyInMinutes}} minutes</p>
-              <p class="card-text my-0">Serves: {{r.servings}}</p>
-
-              <!-- show link to original webpage -->
-              <a href="{{r.sourceUrl}}" target="_blank" class="card-text mb-1 d-block text-center"><small
-                  class="text-muted">{{r.sourceName}}</small></a>
-              <!-- end showlink -->
-
-            </div>
-
-            <button data-id="{{r.id}}" class="btn btn-info show-recipe">Show Recipe</button>
-
-
-            <!-- FAVORITES ICON -->
-
-            <!-- <form id="favorites-form" class="d-inline" method='POST'> -->
-
-            {% if r.id in g.user.favorites %}
-            <p>{{r.id}} - </p>
-            <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
-                class="fas fa-heart fa-2x"></i></button>
-            {% else %}
-            <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
-                class="far fa-heart fa-2x"></i></button>
-            {% endif %}
-
-            <!-- </form> -->
-            <!-- <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
-                class="{% if r.id in g.user.favorites %}far fa-heart fa-2x {% else %}fas fa-heart fa-2x {% endif %}"></i></button> -->
-
-
-            <!-- <button style="float: right;" data-id="{{r.id}}" type="submit" class='btn btn-sm'><i
-                class="favorite-toggle {% if r.id in g.user.favorites %}far fa-heart fa-2x {% else %}fas fa-heart fa-2x {% endif %}"></i></button> -->
-
-            <!-- END FAVORITES -->
+            <!-- show link to original webpage -->
+            <a href="{{r.sourceUrl}}" target="_blank" class="card-text mb-1 d-block text-center"><small
+                class="text-muted">{{r.sourceName}}</small></a>
+            <!-- end showlink -->
 
           </div>
+
+          <a href="/recipes/{{r.id}}" data-id="{{r.id}}" class="btn btn-info show-recipe">Show Recipe</a>
+
+
+          <!-- FAVORITES ICON -->
+
+          <!-- {% if r.id in recipe_ids %}
+          <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
+              class="fas fa-heart fa-2x"></i></button>
+          {% else %}
+          <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
+              class="far fa-heart fa-2x"></i></button>
+          {% endif %} -->
+
+          <button style="float: right;" data-id="{{r.id}}" class='btn btn-sm'><i
+              class="{% if r.id in recipe_ids %}fav far fa-heart fa-2x {% else %}fav far fa-heart fa-2x {% endif %}"></i></button>
+          <!-- END FAVORITES -->
 
         </div>
 
       </div>
-      {% endfor %}
+
     </div>
-
-    <!-- IF USER HAS NO FAVORITE RECIPES -->
-
-    {% else %}
-    <p class="display-3 text-center text-danger">Sorry, you do not have any saved recipes!</p>
-    <a href="/" class="btn btn-info btn-lg">Back</a>
-    {% endif %}
-
-
-
-    <!-- DISPLAY PAGINATION (NEED TO FIX) -->
-    <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-
+    {% endfor %}
   </div>
 
-  <!-- EXAMPLE -->
+  <!-- IF USER HAS NO FAVORITE RECIPES -->
+
+  {% else %}
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Sorry, you do not have any saved recipes!</h1>
+      <a href="/" class="btn btn-info btn-lg">Back</a>
+    </div>
+  </div>
+
+  {% endif %}
+
+  <!-- TEMP CODE -->
 
 
-  {% endblock %}
+
+  <!-- TEMP CODE -->
+  <!-- DISPLAY PAGINATION (NEED TO FIX) -->
+  <!-- <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul> -->
+
+</div>
+
+<!-- EXAMPLE -->
+
+
+{% endblock %}
