@@ -50,7 +50,17 @@ body {
 }
 
 /* ################### NAVBAR ################ */
+
+.logo {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	/* margin: 0.25rem; */
+	padding: 0.25rem;
+}
+
 /* ========== NAVBAR HAMBURGER MENU =========*/
+
 .icon-bar {
 	width: 22px;
 	height: 2px;
@@ -69,6 +79,7 @@ body {
 	background: transparent !important;
 }
 /* ================= ANIMATION =============== */
+
 .navbar-toggler .top-bar {
 	transform: rotate(45deg);
 	transform-origin: 10% 10%;
@@ -95,31 +106,37 @@ body {
 	transform: rotate(0);
 }
 
-/* ================ profile pic ============ */
-
-.nav-pic {
-	width: 35px;
-	height: 35px;
-	border-radius: 50%;
-	margin: none;
-	padding: none;
-}
-
 /* ############ DIET TYPES ############# */
+
 .diets {
 	background-color: #d3d3d3;
-	padding: 1em;
+	padding: 0.5em;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	position: relative;
+	/* position: relative, left; */
 	flex-wrap: nowrap; /* allow side scroll */
 	overflow-x: auto; /* allow side scroll */
+	-webkit-overflow-scrolling: touch;
+	-ms-overflow-style: -ms-autohiding-scrollbar;
 }
+
+.diet {
+	/* margin: auto; */
+	width: 135px;
+	text-align: center;
+	align-content: space-between;
+	flex: 0 0 auto; /* allow side scroll */
+}
+
+.diet + .diet {
+	margin-left: 2em;
+}
+
 .diet-img {
-	width: 100px;
-	height: 100px;
-	margin-bottom: 0.5em;
+	width: 90px;
+	height: 90px;
+	margin: 0.5em auto;
 	background-color: #d3d3d3;
 	border-radius: 50%;
 	/* border: solid #d3d3d3 2px; */
@@ -145,26 +162,15 @@ body {
 	opacity: 0.8;
 }
 
-.diet {
-	margin: auto;
-	width: 135px;
-	text-align: center;
-	align-content: space-between;
-	flex: 0 0 auto; /* allow side scroll */
-}
-
-.diet + .diet {
-	margin-left: 2em;
-}
-
 .text {
-	position: absolute;
+	/* position: absolute; */
 	left: 50%;
 	bottom: 10%;
 	transform: translate(-50%, -50%);
 }
 
 /* ############## RECIPE DISPLAY ############# */
+
 .card {
 	max-width: 24rem;
 	max-height: 100%;
@@ -187,9 +193,9 @@ body {
 .recipe-subtitle {
 	margin: 1em auto;
 }
-/* NEED TO ADD STYLING HERE */
 
 /* ############## FAV ICONS ############## */
+
 .fav {
 	color: tomato;
 }

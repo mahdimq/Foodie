@@ -285,10 +285,8 @@ def favorite_recipe(id):
         return redirect("/login")
 
     # Get recipe from favorites in DB
-    recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
-    print("###########################")
-    print("RECIPE ADD POST ROUTE: ", recipe)
-    print("###########################")
+    recipe = Recipe.query.filter_by(id=id).first()
+    # recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
     if not recipe:
         res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
         data = res.json()
@@ -297,9 +295,6 @@ def favorite_recipe(id):
         g.user.recipes.append(recipe)
         db.session.commit()
     else:
-        print("###########################")
-        print("ERROR in POST ELSE")
-        print("###########################")
         g.user.recipes.append(recipe)
         db.session.commit()
 
@@ -314,38 +309,20 @@ def remove_favorite(id):
     if not g.user:
         flash("Please login to remove recipe from favorites", "danger")
         return redirect("/login")
-    print("###########################")
-    print("ID :", id)
-    print("###########################")
+
 
     try:
         recipe = Recipe.query.filter_by(id=id).first()
         # recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
-        print("###########################")
-        print("RECIPE :", recipe)
-        print("###########################")
         db.session.delete(recipe)
         db.session.commit()
 
-
     except Exception as e:
-        print("###########################")
         print("RECIPE ERROR", e)
-        print("###########################")
         return jsonify(errors=str(e))
 
     res = jsonify(recipe=recipe.serialize(), message="Recipe removed!")
     return (res, 200)
-    # $$$$$$$$$$$$$$$$$$$$$$$#############################%%%%%%%%%%%%%%%%%%%%%
-    # $$$$$$$$$$$$$$$$$$$$$$$#############################%%%%%%%%%%%%%%%%%%%%%
-    # $$$$$$$$$$$$$$$$$$$$$$$#############################%%%%%%%%%%%%%%%%%%%%%
-    # recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
-
-    # db.session.delete(recipe)
-    # db.session.commit()
-
-    # response_json = jsonify(recipe=recipe.serialize(), message="Recipe removed!")
-    # return (response_json, 200)
 
 
 # ######################## SHOW FAVORITES ###########################
@@ -360,42 +337,8 @@ def show_favorites():
 
     # Show ids for recipes in the favorites
     recipe_ids = [r.id for r in g.user.recipes]
-    print("##################################################")
-    print(recipe_ids)
-    print("##################################################")
 
     return render_template("views/favorites.html", recipe_ids = recipe_ids)
-
-# ###################################################
-# ########## TEMP ############
-
-# class PageResult:
-#    def __init__(self, data, page = 1, number = 6):
-#      self.__dict__ = dict(zip(['data', 'page', 'number'], [data, page, number]))
-#      self.full_listing = [self.data[i:i+number] for i in range(0, len(self.data), number)]
-
-#    def __iter__(self):
-#      for i in self.full_listing[self.page-1]:
-#        yield i
-
-#    def __repr__(self): #used for page linking
-#      return "/favorites/{}".format(self.page+1) #view the next page
-
-# @app.route('/favorites/<pagenum>')
-# def show_favorites(pagenum):
-#     if not g.user:
-#         flash("you must be logged in to view favorites", "danger")
-#         return redirect("/login")
-
-#     recipe_ids = [r.id for r in g.user.recipes]
-#     return render_template('views/favorites.html', listing = PageResult(recipe_ids, pagenum))
-
-
-
-# ########## TEMP ############
-# ###################################################
-
-
 
 # ##################### ERROR 404 PAGE ######################
 
@@ -403,7 +346,7 @@ def show_favorites():
 def page_not_found(error):
     """Show 404 ERROR page if page NOT FOUND"""
 
-    return render_template("error.html"), 404
+    return render_template("error1.html"), 404
 
 # ##################### AFTER REQUESTS ######################
 
@@ -418,6 +361,3 @@ def add_header(req):
     return req
 
 
-
-# ###################################################
-# ###################################################

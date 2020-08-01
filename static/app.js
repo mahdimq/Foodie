@@ -17,8 +17,7 @@ async function handleFavorite(e) {
 	const id = $(e.target).parent().data('id')
 	console.log(id)
 
-	if (e.target.classList.contains('fav')) {
-		console.log('Passing this id', id)
+	if (e.target.classList.contains('fas')) {
 		await axios.delete(`/api/favorite/${id}`)
 		$(e.target).toggleClass('fas fa-heart')
 		$(e.target).toggleClass('far fa-heart')

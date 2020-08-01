@@ -17,8 +17,7 @@
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
 
-    <a class="navbar-brand" href="/recipes"><img class="nav-pic mr-1" src="/static/images/chef.jpg"
-        alt="chef icon">Foodie</a>
+    <a class="navbar-brand" href="/recipes"><img class="logo" src="/static/images/foodie.jpeg" alt="logo"></a>
 
     <!-- CUSTOM HAMBURGER MENU -->
 
@@ -36,7 +35,7 @@
 
 
       <!-- ADD ACTION FOR RECIPE SEARCH -->
-      <form class="navbar-form col-md-6 col-sm-8 mx-auto my-2" id="search" action="/search" role="search">
+      <form class="navbar-form col-sm-6 col-sm-8 mx-auto my-2" id="search" action="/search" role="search">
         <div class="input-group">
 
           <!-- SPLITTER IN SEARCH BAR -->
@@ -64,13 +63,10 @@
       </form>
 
 
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav align-items-center">
         {% if session["user_id"] %}
         <li class="nav-item">
-          <div class="row mx-1">
-            <a href="/users/{{g.user.id}}"><img class="nav-pic mr-1" src="{{g.user.img_url}}" alt="profile-icon"></a>
-            <a class="nav-link" href="/users/{{g.user.id}}">{{g.user.username}}</a>
-          </div>
+          <a class="nav-link" href="/users/{{g.user.id}}">{{g.user.username}}</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/favorites">Favorites</a>

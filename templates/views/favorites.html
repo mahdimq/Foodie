@@ -40,16 +40,9 @@
 
           <!-- FAVORITES ICON -->
 
-          <!-- {% if r.id in recipe_ids %}
           <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
-              class="fas fa-heart fa-2x"></i></button>
-          {% else %}
-          <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
-              class="far fa-heart fa-2x"></i></button>
-          {% endif %} -->
+              class="{% if r.id in recipe_ids %}fas fa-heart fa-2x{% else %}far fa-heart fa-2x{% endif %}"></i></button>
 
-          <button style="float: right;" data-id="{{r.id}}" class='btn btn-sm'><i
-              class="{% if r.id in recipe_ids %}fav far fa-heart fa-2x {% else %}fav far fa-heart fa-2x {% endif %}"></i></button>
           <!-- END FAVORITES -->
 
         </div>
