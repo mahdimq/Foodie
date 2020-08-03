@@ -7,9 +7,6 @@ from sqlalchemy.exc import IntegrityError
 from helper import diets, cuisines, diet_icons, add_recipe, do_logout
 import requests
 
-# ##### TEMP DATA ########
-# from users import recipe, diets, results, details, ids
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///foodie'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,7 +21,7 @@ connect_db(app)
 # #################### SPOONACULAR API INFO ########################
 BASE_URL = "https://api.spoonacular.com/recipes"
 API_KEY = key2
-OFFSET = 9
+
 # ########################## USER SESSION ##########################
 CURR_USER = "user_id"
 
@@ -52,11 +49,7 @@ def add_user_to_g():
 
 @ app.route('/signup', methods=["GET", "POST"])
 def signup():
-    """
-    Handles user signup.
-    GET Displays signup form
-    POST Creates/Adds new user to DB and redirects home
-    """
+    """Handle User Registration and Display form"""
 
     form = SignupForm()
 
@@ -116,7 +109,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Handle logout of user."""
+    """Handle user logout"""
     do_logout()
     flash("You have been logged out!", "success")
     return redirect("/")
@@ -126,7 +119,7 @@ def logout():
 
 @app.route("/users/<int:id>/delete", methods=["POST"])
 def delete_user(id):
-    """Delete user."""
+    """Delete user profile"""
 
     # Check if user is authorized
     if id != session[CURR_USER] or "user_id" not in session:
@@ -148,7 +141,7 @@ def delete_user(id):
 
 @app.route("/users/<int:id>")
 def show_user(id):
-    """Redirect to users page"""
+    """Redirect to user details page"""
 
     if CURR_USER not in session or id != session[CURR_USER]:
         flash("You must be logged in to view this page", "danger")
@@ -203,8 +196,9 @@ def homepage():
 def show_recipes():
     """Show home page with or without auth
     auto populate it with random recipes """
+
     # SPOONACULAR ENDPOINT
-    res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 1 })
+    res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 8})
 
     data = res.json()
     recipes = data['recipes']
@@ -218,19 +212,21 @@ def show_recipes():
 # ======= GET RECIPE BY DIET =========
 @app.route("/recipes/<diet>")
 def show_diets(diet):
-    """Show recipes by diets"""
-    res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "number": 1 })
+    """Show first 8 recipes by diets"""
+
+    # SPOONACULAR ENDPOINT
+    res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "number": 8, "offset": offset })
 
     data = res.json()
     recipes = data['results']
+
 
     if len(recipes) == 0:
         flash("Recipe limit reached! Try again later", "warning")
         return render_template("index.html")
 
     recipe_ids = [r.id for r in g.user.recipes]
-    # return jsonify(data)
-    return render_template("index.html", recipes=recipes, recipe_ids=recipe_ids)
+    return render_template("/index.html", recipes=recipes, recipe_ids=recipe_ids)
 
 
 # ########################################################################
@@ -242,11 +238,12 @@ def search_recipe():
     query = request.args.get('query', "")
     cuisine = request.args.get('cuisine', "")
     diet = request.args.get('diet', "")
-    number = 3
+    offset = request.args.get('offset')
+    number = 8
 
     # SPOONACULAR ENDPOINT
     if request.args:
-        res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "cuisine": cuisine, "query": query, "number": number })
+        res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "cuisine": cuisine, "query": query, "number": number, "offset": offset })
         data = res.json()
 
     if len(data['results']) == 0:
@@ -255,11 +252,14 @@ def search_recipe():
 
     recipes = data['results']
 
+    path = f"/search?query={query}&cuisine={cuisine}&diet={diet}"
+
+
     # Make a list of recipes in the DB
     recipe_ids = [r.id for r in g.user.recipes]
     favorites = [f['id'] for f in recipes if f['id'] in recipe_ids]
 
-    return render_template("index.html", recipes=recipes, recipe_ids=recipe_ids, favorites=favorites)
+    return render_template("index.html", recipes=recipes, recipe_ids=recipe_ids, favorites=favorites, url=path, offset=offset)
 
 # ####################### SHOW RECIPES DETAILS ######################
 
@@ -286,7 +286,7 @@ def favorite_recipe(id):
 
     # Get recipe from favorites in DB
     recipe = Recipe.query.filter_by(id=id).first()
-    # recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
+
     if not recipe:
         res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
         data = res.json()
@@ -313,7 +313,6 @@ def remove_favorite(id):
 
     try:
         recipe = Recipe.query.filter_by(id=id).first()
-        # recipe = Favorite.query.filter_by(user_id=g.user.id, recipe_id=id).first()
         db.session.delete(recipe)
         db.session.commit()
 
@@ -346,7 +345,7 @@ def show_favorites():
 def page_not_found(error):
     """Show 404 ERROR page if page NOT FOUND"""
 
-    return render_template("error1.html"), 404
+    return render_template("error.html"), 404
 
 # ##################### AFTER REQUESTS ######################
 

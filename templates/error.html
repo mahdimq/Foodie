@@ -1,12 +1,33 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}ERROR 404{% endblock %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/error.css">
+  <title>404</title>
+</head>
 
-{% block content %}
 
-<h1 style="background-color: white; text-align: center; margin: 0 auto; padding: 1em;">Sorry, you might have stumbled
-  upon the wrong page!</h1>
-<iframe src="https://giphy.com/embed/8L0Pky6C83SzkzU55a" width="480" height="560px" frameBorder="0"
-  class="giphy-embed ml-auto mr-auto d-block" allowFullScreen></iframe>
+<body>
 
-{% endblock %}
+  <h3 class=title>ERROR 404</h3>
+  <div class="hole-wrapper">
+    <div class="hole">
+      <div class="wood"></div>
+      <div class="hand">
+        <span class="finger-up"></span>
+        <span class="finger"></span>
+        <span class="finger"></span>
+        <span class="finger"></span>
+        <span class="finger"></span>
+      </div>
+      <div class="arm">
+      </div>
+    </div>
+  </div>
+  <a class="btn" href="/">Go Home</a>
+
+</body>
+
+</html>

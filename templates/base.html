@@ -15,86 +15,89 @@
 
 <body>
   <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="box">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
 
-    <a class="navbar-brand" href="/recipes"><img class="logo" src="/static/images/foodie.jpeg" alt="logo"></a>
+      <a class="navbar-brand" href="/recipes"><img class="logo" src="/static/images/foodie.jpeg" alt="logo"></a>
 
-    <!-- CUSTOM HAMBURGER MENU -->
+      <!-- CUSTOM HAMBURGER MENU -->
 
-    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="icon-bar top-bar"></span>
-      <span class="icon-bar middle-bar"></span>
-      <span class="icon-bar bottom-bar"></span>
-    </button>
+      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="icon-bar top-bar"></span>
+        <span class="icon-bar middle-bar"></span>
+        <span class="icon-bar bottom-bar"></span>
+      </button>
 
-    <!-- CUSTROM HAMBURGER  -->
-
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- CUSTROM HAMBURGER  -->
 
 
-      <!-- ADD ACTION FOR RECIPE SEARCH -->
-      <form class="navbar-form col-sm-6 col-sm-8 mx-auto my-2" id="search" action="/search" role="search">
-        <div class="input-group">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-          <!-- SPLITTER IN SEARCH BAR -->
-          <select class="custom-select" name="diet" id="diet">
-            <option selected> <span class="text-muted">Diets</span> </option>
-            {% for diet in g.diets %}
-            <option value="{{diet}}">{{ diet.capitalize() }}</option>
-            {% endfor %}
-          </select>
 
-          <!-- SPLITTER IN SEARCH BAR -->
-          <select class="custom-select" name="cuisine" id="cuisine" data-container="body">
-            <option selected> <span class="text-muted">Cuisines</span> </option>
-            {% for cuisine in g.cuisines %}
-            <option value="{{cuisine}}">{{ cuisine.capitalize() }}</option>
-            {% endfor %}
-          </select>
+        <!-- ADD ACTION FOR RECIPE SEARCH -->
+        <form class="navbar-form col-sm-6 col-sm-8 mx-auto my-2" id="search" action="/search" role="search">
+          <div class="input-group">
 
-          <!-- BUTTON -->
-          <input type="text" class="form-control" placeholder="Search" name="query" id="query">
-          <div class="input-group-btn input-group-append">
-            <button class="btn btn-outline-info" type="submit"><i class="fas fa-search"></i></button>
+            <!-- SPLITTER IN SEARCH BAR -->
+            <select class="custom-select" name="diet" id="diet">
+              <option selected> <span class="text-muted">Diets</span> </option>
+              {% for diet in g.diets %}
+              <option value="{{diet}}">{{ diet.capitalize() }}</option>
+              {% endfor %}
+            </select>
+
+            <!-- SPLITTER IN SEARCH BAR -->
+            <select class="custom-select" name="cuisine" id="cuisine" data-container="body">
+              <option selected> <span class="text-muted">Cuisines</span> </option>
+              {% for cuisine in g.cuisines %}
+              <option value="{{cuisine}}">{{ cuisine.capitalize() }}</option>
+              {% endfor %}
+            </select>
+
+            <!-- BUTTON -->
+            <input type="text" class="form-control" placeholder="Search" name="query" id="query">
+            <div class="input-group-btn input-group-append">
+              <button class="btn btn-outline-info" type="submit"><i class="fas fa-search"></i></button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
 
 
-      <ul class="navbar-nav align-items-center">
-        {% if session["user_id"] %}
-        <li class="nav-item">
-          <a class="nav-link" href="/users/{{g.user.id}}">{{g.user.username}}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/favorites">Favorites</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="/signup">Sign Up</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
-        {% endif %}
-      </ul>
+        <ul class="navbar-nav align-items-center">
+          {% if session["user_id"] %}
+          <li class="nav-item">
+            <a class="nav-link" href="/users/{{g.user.id}}">{{g.user.username}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/favorites">Favorites</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="/signup">Sign Up</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+          {% endif %}
+        </ul>
 
-    </div>
-  </nav>
+      </div>
+    </nav>
 
-  <!-- FLASH MESSAGING -->
-  {% for category, message in get_flashed_messages(with_categories=True) %}
-  <div class="alert alert-{{ category }}">{{ message }}</div>
-  {% endfor %}
+    <!-- FLASH MESSAGING -->
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
 
-  {% block content %}
-  <!-- CONTENT GOES HERE -->
-  {% endblock %}
+    {% block content %}
+    <!-- CONTENT GOES HERE -->
+    {% endblock %}
+  </div>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -112,6 +115,7 @@
   <script src="https://unpkg.com/jquery"></script>
   <script src="https://unpkg.com/bootstrap"></script>
   <script src="https://unpkg.com/axios/dist/axios.js"></script>
+  <script src="/static/helper.js"></script>
   <script src="/static/app.js"></script>
 </body>
 

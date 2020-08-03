@@ -1,5 +1,3 @@
-const recipeDisplay = document.querySelector('#recipe-display')
-
 // searchForm.addEventListener('submit', showRecipes)
 
 // Handle Show recipe
