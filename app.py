@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, redirect, request, g, flash, session, jsonify, make_response
 from models import db, connect_db, User, Recipe, Favorite
-from secret import key, key2, key3
+from config import key, key2, key3
 from forms import SignupForm, LoginForm, EditUserForm
 from sqlalchemy.exc import IntegrityError
 from helper import diets, cuisines, diet_icons, add_recipe, do_logout
@@ -15,12 +15,10 @@ app.config['SECRET_KEY'] = 'secret_recipe'
 
 connect_db(app)
 
-# request.args -> gets query string for get route
-# request.params -> gets form data for post route
 
 # #################### SPOONACULAR API INFO ########################
 BASE_URL = "https://api.spoonacular.com/recipes"
-API_KEY = key2
+API_KEY = key
 
 # ########################## USER SESSION ##########################
 CURR_USER = "user_id"
@@ -41,11 +39,11 @@ def add_user_to_g():
     g.diets = [diet for diet in diets]
     g.diet_icons = [icons for icons in diet_icons]
 
-#==============================================================
-# USER ROUTES
-# =============================================================
+#==================================================================
+#                           USER ROUTES
+# =================================================================
 
-# ############### SIGN UP FORM ################
+# ################### SIGN UP FORM ####################
 
 @ app.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -62,7 +60,7 @@ def signup():
         new_user = User.register(username, password, email, image)
         db.session.add(new_user)
 
-        # ######## NEED TO FIX ERROR HANDLING ###########
+        # ======== NEED TO FIX ERROR HANDLING ========
         try:
             db.session.commit()
         except IntegrityError:
@@ -136,7 +134,6 @@ def delete_user(id):
         flash(f"{g.user.username}'s account has been deleted!", "info")
         return redirect("/")
 
-
 # ################### SHOW USER DETAILS ####################
 
 @app.route("/users/<int:id>")
@@ -149,7 +146,6 @@ def show_user(id):
 
     user = User.query.get_or_404(id)
     return render_template("/users/profile.html", user=user)
-
 
 # ################### UPDATE USER DETAILS ####################
 
@@ -171,34 +167,34 @@ def update_user(id):
         user.img_url = form.img_url.data or None
 
         db.session.commit()
-        flash('Changes successfully made to account', 'info')
+        flash('Updated profile successfully', 'info')
         return redirect(f'/users/{id}')
     try:
         return render_template("/users/update.html", form=form, user=user)
     except:
         return ('', 403)
 
+#==================================================================
+#                           VIEW ROUTES
+# =================================================================
 
-#==============================================================
-# VIEW ROUTES
-# =============================================================
-
-# ################### HOME PAGE BASIC ###################
+# ########################## HOME PAGE #########################
 
 @app.route("/")
 def homepage():
     """show homepage modal explaining website"""
 
-    return render_template("home.html")
+    return render_template("index.html")
 
-# ======= GET RANDOM RECIPES ========
-@app.route("/recipes")
+# ##################### SHOW RANDOM RECIPES #####################
+
+@app.route("/random")
 def show_recipes():
     """Show home page with or without auth
     auto populate it with random recipes """
 
     # SPOONACULAR ENDPOINT
-    res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 8})
+    res = requests.get(f"{BASE_URL}/random", params={ "apiKey": API_KEY, "number": 8 })
 
     data = res.json()
     recipes = data['recipes']
@@ -206,13 +202,14 @@ def show_recipes():
         flash("Recipe limit reached! Try again later", "warning")
         return render_template("index.html")
 
-    return render_template("index.html", recipes=recipes)
+    return render_template("/views/random.html", recipes=recipes)
 
+# #################### GET RECIPE BY DIET #####################
 
-# ======= GET RECIPE BY DIET =========
 @app.route("/recipes/<diet>")
 def show_diets(diet):
-    """Show first 8 recipes by diets"""
+    """Show recipes by diets"""
+    offset = request.args.get('offset')
 
     # SPOONACULAR ENDPOINT
     res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "number": 8, "offset": offset })
@@ -220,18 +217,19 @@ def show_diets(diet):
     data = res.json()
     recipes = data['results']
 
+    path = f"/recipes/{diet}?diet={diet}"
 
     if len(recipes) == 0:
         flash("Recipe limit reached! Try again later", "warning")
         return render_template("index.html")
 
+    # recipe id's already in the user's list
     recipe_ids = [r.id for r in g.user.recipes]
-    return render_template("/index.html", recipes=recipes, recipe_ids=recipe_ids)
 
+    return render_template("/views/recipes.html", recipes=recipes, recipe_ids=recipe_ids,  offset=offset, url=path)
 
-# ########################################################################
+# ########## SEARCH FOR A RECIPE WITH CUISINE AND DIET ###########
 
-# ========= SEARCH FOR A RECIPE WITH CUISINE AND DIETS ========
 @app.route("/search")
 def search_recipe():
     """Search by diets and cuisines"""
@@ -247,21 +245,21 @@ def search_recipe():
         data = res.json()
 
     if len(data['results']) == 0:
-        flash("Sorry, no recipes found!", "danger")
-        render_template("index.html")
+        flash("Sorry, no more recipes found!", "danger")
+        render_template("/views/random.html")
 
     recipes = data['results']
 
     path = f"/search?query={query}&cuisine={cuisine}&diet={diet}"
 
-
     # Make a list of recipes in the DB
     recipe_ids = [r.id for r in g.user.recipes]
+    # show recipes already in the favorites
     favorites = [f['id'] for f in recipes if f['id'] in recipe_ids]
 
-    return render_template("index.html", recipes=recipes, recipe_ids=recipe_ids, favorites=favorites, url=path, offset=offset)
+    return render_template("/views/recipes.html", recipes=recipes, recipe_ids=recipe_ids, favorites=favorites, url=path, offset=offset)
 
-# ####################### SHOW RECIPES DETAILS ######################
+# ################### SHOW RECIPE DETAILS ####################
 
 @app.route("/recipes/<int:id>")
 def show_recipe(id):
@@ -274,7 +272,22 @@ def show_recipe(id):
     # return jsonify(data)
     return render_template("views/details.html", recipes=data)
 
-# #################### FAVORITE RECIPE ####################
+# ######################## SHOW FAVORITES ########################
+
+@app.route("/favorites")
+def show_favorites():
+    """show favorited recipes"""
+
+    if not g.user:
+        flash("you must be logged in to view favorites", "danger")
+        return redirect("/login")
+
+    # Show ids for recipes in the favorites
+    recipe_ids = [r.id for r in g.user.recipes]
+
+    return render_template("views/favorites.html", recipe_ids=recipe_ids)
+
+# #################### ADD FAVORITE RECIPE ####################
 
 @app.route("/api/favorite/<int:id>", methods=["POST"])
 def favorite_recipe(id):
@@ -282,7 +295,7 @@ def favorite_recipe(id):
 
     if not g.user:
         flash("Please login to add recipe to favorites", "danger")
-        return redirect("/login")
+        return abort(401)
 
     # Get recipe from favorites in DB
     recipe = Recipe.query.filter_by(id=id).first()
@@ -301,15 +314,14 @@ def favorite_recipe(id):
     response = jsonify(recipe=recipe.serialize(), message="Recipe has been added!")
     return (response, 200)
 
-# ########################### DELETE FAVORITE HTML ##################################
+# ################### REMOVE FAVORITE RECIPE ####################
 
 @ app.route('/api/favorite/<int:id>', methods=['DELETE'])
 def remove_favorite(id):
     """ Unfavorite a recipe """
     if not g.user:
         flash("Please login to remove recipe from favorites", "danger")
-        return redirect("/login")
-
+        return abort(401)
 
     try:
         recipe = Recipe.query.filter_by(id=id).first()
@@ -323,23 +335,7 @@ def remove_favorite(id):
     res = jsonify(recipe=recipe.serialize(), message="Recipe removed!")
     return (res, 200)
 
-
-# ######################## SHOW FAVORITES ###########################
-
-@app.route("/favorites")
-def show_favorites():
-    """show favorited recipes"""
-
-    if not g.user:
-        flash("you must be logged in to view favorites", "danger")
-        return redirect("/login")
-
-    # Show ids for recipes in the favorites
-    recipe_ids = [r.id for r in g.user.recipes]
-
-    return render_template("views/favorites.html", recipe_ids = recipe_ids)
-
-# ##################### ERROR 404 PAGE ######################
+# ####################### ERROR 404 PAGE ######################
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -347,7 +343,7 @@ def page_not_found(error):
 
     return render_template("error.html"), 404
 
-# ##################### AFTER REQUESTS ######################
+# ####################### AFTER REQUESTS ######################
 
 @app.after_request
 def add_header(req):

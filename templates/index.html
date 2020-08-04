@@ -1,98 +1,19 @@
 {% extends 'base.html' %}
 
-{% block title %}INDEX{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-
-
-<!-- DIET TYPE AREA -->
-
-<div class="diets">
-  {% for d in g.diet_icons %}
-  <div class="diet">
-    <a class="diet-link" href="/recipes/{{d.name}}">
-      <img class='diet-img' src="{{d.image}}" alt="{{d.name}}">
-      <div class="txt">{{d.name}}</div>
-    </a>
-  </div>
-  {% endfor %}
-</div>
-
-<!-- END CAROUSEL -->
-
-
-<!-- DISPLAY MAIN AREA -->
 <div class="container">
 
-  {% if recipes %}
-  <!-- DISPLAY RECIPE CARDS -->
-  <div id="recipe-display" class="row justify-content-center align-items-center mt-2">
-
-    {% for r in recipes %}
-
-    <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5 col-xl-4 my-2">
-
-      <div class="card border mb-4 mx-auto p-1">
-
-        <img src="{{r.image}}" class="card-img-top" alt="{{r.title}}">
-
-        <div class="card-body py-1">
-          <h5 class="card-label d-inline">{{r.title}}</h5>
-
-          <div class="card-body">
-            <p class="card-text my-0">Prep Time: {{r.readyInMinutes}} minutes</p>
-            <p class="card-text my-0">Serves: {{r.servings}}</p>
-
-            <!-- show link to original webpage -->
-            <a href="{{r.sourceUrl}}" target="_blank" class="card-text mb-1 d-block text-center"><small
-                class="text-muted">{{r.sourceName}}</small></a>
-            <!-- end showlink -->
-
-          </div>
-          <a href="/recipes/{{r.id}}" data-id="{{r.id}}" class="btn btn-info show-recipe d-inline">Show Recipe</a>
-
-
-          <!-- FAVORITES ICON -->
-
-          <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
-              class="{% if r.id in recipe_ids %}fas fa-heart fa-2x{% else %}far fa-heart fa-2x{% endif %}"></i></button>
-
-          <!-- END FAVORITES -->
-        </div>
-      </div>
-    </div>
-
-    {% endfor %}
-
-    {% else %}
-
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">RECIPE NOT FOUND!</h1>
-        <a href="/" class="btn btn-info btn-lg">Back</a>
-      </div>
-    </div>
-
-    {% endif %}
+  <div class="jumbotron my-4 px-4">
+    <h1 class="display-5 justify-content-center align-items-center"><img id="logo" src="/static/images/foodie.jpeg"
+        alt="logo"> Foodie</h1>
+    <p class="lead">Welcome to the foodie app. Click start to continue</p>
+    <hr class="my-4">
+    <p>Select a recipe by using the search bar, or select from any of the random recipes auto populated</p>
+    <p>Recipes can also be selected by clicking on the diet badges for random recipes in those diets</p>
+    <a class="btn btn-info btn-lg start-btn" href="/random" role="button">Start</a>
   </div>
 
-  <!-- DISPLAY PAGINATION (NEED TO FIX) -->
-  <ul id="page-ul" class="pagination justify-content-center">
-
-    <li class="page-item {{'active' if offset|int  == 0}}"><a class="page-link" href="{{url}}&offset=0">1</a></li>
-    <li class="page-item {{'active' if offset|int == 8}}"><a class="page-link" href="{{url}}&offset=8">2</a></li>
-    <li class="page-item {{'active' if offset|int == 16}}"><a class="page-link" href="{{url}}&offset=16">3</a>
-    </li>
-    <li class="page-item {{'active' if offset|int == 24}}"><a class="page-link" href="{{url}}&offset=24">4</a>
-    </li>
-    <li class="page-item {{'active' if offset|int == 32}}"><a class="page-link" href="{{url}}&offset=32">5</a>
-    </li>
-
-  </ul>
-
 </div>
-
-<!-- EXAMPLE -->
-
-
 {% endblock %}

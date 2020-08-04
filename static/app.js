@@ -12,6 +12,7 @@ print.on('click', handlePrint)
 // show recipe details
 // recipeDisplay.on('click', '.show-recipe', showRecipe)
 
+// Handle toggle favorites
 async function handleFavorite(e) {
 	e.preventDefault()
 	const id = $(e.target).parent().data('id')
@@ -21,12 +22,12 @@ async function handleFavorite(e) {
 		await axios.delete(`/api/favorite/${id}`)
 		$(e.target).toggleClass('fas fa-heart')
 		$(e.target).toggleClass('far fa-heart')
-		console.log('DELETE METHOD')
+		console.log('DELETE METHOD - Unfavorited Recipe')
 	} else {
 		await axios.post(`/api/favorite/${id}`, (data = { id: id }))
 		$(e.target).toggleClass('fas fa-heart')
 		$(e.target).toggleClass('far fa-heart')
-		console.log('ADD METHOD')
+		console.log('ADD METHOD - Favorited Recipe')
 	}
 }
 

@@ -38,16 +38,3 @@ def do_logout():
     """Logout user."""
     if CURR_USER in session:
       session.pop(CURR_USER)
-
-def num_of_pages(self, total_recipes):
-        return math.floor(total_recipes / OFFSET)
-
-def paginatination(page):
-  """Renders pages"""
-
-
-def get_recipes(self, page):
-      offset = int(page) * OFFSET
-      url = f"https://api.spoonacular.com/recipes/complexSearch?cuisine=vietnamese&number={PER_PAGE}&apiKey={API_KEY}&offset={offset}"
-      response = requests.get(url)
-      return response
