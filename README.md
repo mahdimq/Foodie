@@ -1,7 +1,7 @@
 # Foodie
 
 **Check it out**
-[Foodie](https://www.google.com)
+[Foodie](https://foodie-webapp.herokuapp.com)
 
 ## Foodie makes anyone a chef!
 

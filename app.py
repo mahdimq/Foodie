@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, redirect, request, g, flash, session, jsonify, make_response
 from models import db, connect_db, User, Recipe, Favorite
-# from config import key #<-- comment out for production
+from config import key #<-- comment out for production
 from forms import SignupForm, LoginForm, EditUserForm
 from sqlalchemy.exc import IntegrityError
 from helper import diets, cuisines, diet_icons, add_recipe, do_logout
@@ -17,8 +17,8 @@ connect_db(app)
 
 # #################### SPOONACULAR API INFO ########################
 BASE_URL = "https://api.spoonacular.com/recipes"
-API_KEY = os.environ.get('KEY')
-# API_KEY = key #<-- comment out for production
+# API_KEY = os.environ.get('KEY')
+API_KEY = key #<-- comment out for production
 
 # ########################## USER SESSION ##########################
 CURR_USER = "user_id"
