@@ -1,4 +1,5 @@
 /api.rest
-/__pycache__
-/venv
-/config.py
+__pycache__/
+venv/
+config/
+/static/images/Foodie-schema.png/
