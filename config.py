@@ -1,3 +1,0 @@
-
-# SPOONACULAR API KEYS
-key = "ec6f03064fbe4a059e792867f2c0c6d9"
