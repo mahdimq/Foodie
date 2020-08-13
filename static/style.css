@@ -20,7 +20,7 @@ body {
 /* ############## BACKGROUNG IMAGE ################ */
 
 body {
-	background: url('/static/images/background.jpg') no-repeat center center fixed;
+	background: url('/static/images/background2.jpg') no-repeat center center fixed;
 	background-size: cover;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
@@ -31,11 +31,11 @@ body {
 }
 
 /* remove fixed scrolling for mobile devices */
-@media (max-width: 768px) {
+@media (max-width: 668px) {
 	body {
 		background-repeat: repeat;
 		background-attachment: local;
-		background-position: left;
+		background-position: right;
 	}
 }
 
