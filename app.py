@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, redirect, request, g, flash, session, jsonify, make_response
 from models import db, connect_db, User, Recipe, Favorite
-from config import key, key2, key3
+from config import key
 from forms import SignupForm, LoginForm, EditUserForm
 from sqlalchemy.exc import IntegrityError
 from helper import diets, cuisines, diet_icons, add_recipe, do_logout
@@ -15,7 +15,6 @@ app.config['SECRET_KEY'] = 'secret_recipe'
 
 connect_db(app)
 
-
 # #################### SPOONACULAR API INFO ########################
 BASE_URL = "https://api.spoonacular.com/recipes"
 API_KEY = key
@@ -27,7 +26,7 @@ CURR_USER = "user_id"
 
 @app.before_request
 def add_user_to_g():
-    """If we're logged in, add curr user to Flask global."""
+    """If we're logged in, add current user to Flask global."""
 
     if CURR_USER in session:
         g.user = User.query.get(session[CURR_USER])
@@ -41,7 +40,7 @@ def add_user_to_g():
 
 #==================================================================
 #                           USER ROUTES
-# =================================================================
+#==================================================================
 
 # ################### SIGN UP FORM ####################
 
@@ -60,12 +59,15 @@ def signup():
         new_user = User.register(username, password, email, image)
         db.session.add(new_user)
 
-        # ======== NEED TO FIX ERROR HANDLING ========
         try:
             db.session.commit()
-        except IntegrityError:
+        except IntegrityError as err:
             db.session.rollback()
-            form.username.errors.append("Username taken, please pick another")
+            # Check user input for errors and append to errors
+            if "Key (email)" in str(err):
+                form.email.errors.append("Email taken, please pick another")
+            elif "Key (username)" in str(err):
+                form.username.errors.append("Username taken, please pick another")
             return render_template("/users/signup.html", form=form)
 
         # ADD USER TO SESSION
@@ -109,7 +111,7 @@ def login():
 def logout():
     """Handle user logout"""
     do_logout()
-    flash("You have been logged out!", "success")
+    flash("You have been succesfully logged out!", "success")
     return redirect("/")
 
 
@@ -176,7 +178,7 @@ def update_user(id):
 
 #==================================================================
 #                           VIEW ROUTES
-# =================================================================
+#==================================================================
 
 # ########################## HOME PAGE #########################
 
@@ -204,7 +206,7 @@ def show_recipes():
 
     return render_template("/views/random.html", recipes=recipes)
 
-# #################### GET RECIPE BY DIET #####################
+# ##################### GET RECIPE BY DIET ######################
 
 @app.route("/recipes/<diet>")
 def show_diets(diet):
@@ -224,11 +226,14 @@ def show_diets(diet):
         return render_template("index.html")
 
     # recipe id's already in the user's list
-    recipe_ids = [r.id for r in g.user.recipes]
+    if g.user:
+        recipe_ids = [r.id for r in g.user.recipes]
+    else:
+        recipe_ids = []
 
     return render_template("/views/recipes.html", recipes=recipes, recipe_ids=recipe_ids,  offset=offset, url=path)
 
-# ########## SEARCH FOR A RECIPE WITH CUISINE AND DIET ###########
+# ########### SEARCH FOR A RECIPE WITH CUISINE AND DIET ############
 
 @app.route("/search")
 def search_recipe():
@@ -239,13 +244,13 @@ def search_recipe():
     offset = request.args.get('offset')
     number = 8
 
-    # SPOONACULAR ENDPOINT
     if request.args:
+        # SPOONACULAR ENDPOINT
         res = requests.get(f"{BASE_URL}/complexSearch", params={ "apiKey": API_KEY, "diet": diet, "cuisine": cuisine, "query": query, "number": number, "offset": offset })
         data = res.json()
 
     if len(data['results']) == 0:
-        flash("Sorry, no more recipes found!", "danger")
+        flash("Sorry, no recipes found!", "danger")
         render_template("/views/random.html")
 
     recipes = data['results']
@@ -253,7 +258,10 @@ def search_recipe():
     path = f"/search?query={query}&cuisine={cuisine}&diet={diet}"
 
     # Make a list of recipes in the DB
-    recipe_ids = [r.id for r in g.user.recipes]
+    if g.user:
+        recipe_ids = [r.id for r in g.user.recipes]
+    else:
+        recipe_ids = []
     # show recipes already in the favorites
     favorites = [f['id'] for f in recipes if f['id'] in recipe_ids]
 
@@ -269,7 +277,6 @@ def show_recipe(id):
 
     data = res.json()
 
-    # return jsonify(data)
     return render_template("views/details.html", recipes=data)
 
 # ######################## SHOW FAVORITES ########################
@@ -301,6 +308,7 @@ def favorite_recipe(id):
     recipe = Recipe.query.filter_by(id=id).first()
 
     if not recipe:
+        # SPOONACULAR ENDPOINT
         res = requests.get(f"{BASE_URL}/{id}/information", params={ "apiKey": API_KEY, "includeNutrition": False })
         data = res.json()
         recipe = add_recipe(data)

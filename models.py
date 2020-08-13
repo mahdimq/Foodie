@@ -16,10 +16,6 @@ class User(db.Model):
     """Create a schema table for users"""
     __tablename__ = 'users'
 
-    def __repr__(self):
-        u = self
-        return f"<User id={u.id} firstname={u.firstname} lastname={u.lastname} image_url={u.image_url}>"
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), unique=True)
     password = db.Column(db.Text, nullable=False)
@@ -69,7 +65,7 @@ class User(db.Model):
         }
 
     def __repr__(self):
-        return f'<User= username:{self.username} email:{self.email} >'
+        return f'<User= id:{self.id} username:{self.username} email:{self.email}>'
 
 
 class Favorite(db.Model):

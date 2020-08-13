@@ -6,14 +6,6 @@
 }
 
 /* ########## MAIN BACKGROUND IMAGE ########## */
-/*
-body {
-	background: url(/static/images/background.jpg) no-repeat center center fixed;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-} */
 
 html,
 body {
@@ -25,15 +17,29 @@ body {
 	flex-direction: column;
 }
 
+/* ############## BACKGROUNG IMAGE ################ */
+
 body {
 	background: url('/static/images/background.jpg') no-repeat center center fixed;
+	background-size: cover;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
-	background-size: cover;
-	font-family: 'Avenir Light', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
-		Arial, sans-serif !important;
+	background-color: #d0a27e;
+	background-clip: border-box;
+	height: 100%;
 }
+
+/* remove fixed scrolling for mobile devices */
+@media (max-width: 768px) {
+	body {
+		background-repeat: repeat;
+		background-attachment: local;
+		background-position: left;
+	}
+}
+
+/* =============================================== */
 
 #print {
 	color: rgb(1, 102, 102);
@@ -45,7 +51,8 @@ body {
 }
 
 .jumbotron {
-	opacity: 0.95;
+	opacity: 0.93;
+	background-color: #dbd2d2;
 }
 /* ############## USER DETAILS ############# */
 
@@ -124,25 +131,30 @@ body {
 
 /* ############ DIET TYPES ############# */
 
-.diets {
+.wrapper {
 	background-color: #d3d3d3;
-	padding: 0.5em;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	/* position: relative, left; */
-	flex-wrap: nowrap; /* allow side scroll */
-	overflow-x: auto; /* allow side scroll */
-	-webkit-overflow-scrolling: touch;
-	-ms-overflow-style: -ms-autohiding-scrollbar;
+	padding: 0.2em;
+	margin: auto;
+	text-align: center;
+	position: relative;
+	width: 100%;
 }
 
+/* Horizontal scrolling */
+.diets {
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+}
 .diet {
-	/* margin: auto; */
 	width: 135px;
+	margin: 0 1.5em;
 	text-align: center;
-	align-content: space-between;
-	flex: 0 0 auto; /* allow side scroll */
+	cursor: pointer;
+	display: inline-block;
+	*display: inline; /* For IE7*/
+	*zoom: 1; /* For IE7*/
+	vertical-align: top;
 }
 
 .diet + .diet {
@@ -155,7 +167,6 @@ body {
 	margin: 0.5em auto;
 	background-color: #d3d3d3;
 	border-radius: 50%;
-	/* border: solid #d3d3d3 2px; */
 	background-size: cover;
 	background-position: center center;
 	/* BOX SHADOW */
@@ -179,7 +190,6 @@ body {
 }
 
 .text {
-	/* position: absolute; */
 	left: 50%;
 	bottom: 10%;
 	transform: translate(-50%, -50%);
@@ -192,9 +202,17 @@ body {
 	max-height: 100%;
 }
 
+.card-title {
+	height: 3.5em;
+}
+
+.card-body {
+	padding: 0.75rem;
+}
+
 .recipe-img {
-	/* border-radius: 5px; */
 	width: 100%;
+	object-fit: cover;
 }
 
 .info-list {
@@ -208,6 +226,13 @@ body {
 
 .recipe-subtitle {
 	margin: 1em auto;
+}
+
+/* ############## CARD BOTTOM ############## */
+.details {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 /* ############## FAV ICONS ############## */
@@ -242,7 +267,7 @@ a:hover,
 a:active {
 	opacity: 0.9;
 	cursor: pointer;
-	color: #fff;
+	color: rgb(92, 102, 102);
 }
 
 .footer {

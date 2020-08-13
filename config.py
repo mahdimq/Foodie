@@ -1,5 +1,5 @@
 
 # SPOONACULAR API KEYS
-key = "db254b5cd61744d39a2deebd9c361444"
-key2 = "ec6f03064fbe4a059e792867f2c0c6d9"
-key3 = "2abc01d30552443786fb4e87c57f9f99"
+key = "ec6f03064fbe4a059e792867f2c0c6d9"
+key2 = "2abc01d30552443786fb4e87c57f9f99"
+key3 = "db254b5cd61744d39a2deebd9c361444"

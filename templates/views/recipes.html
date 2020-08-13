@@ -6,16 +6,17 @@
 
 
 <!-- DIET TYPE AREA -->
-
-<div class="diets">
-  {% for d in g.diet_icons %}
-  <div class="diet">
-    <a class="diet-link" href="/recipes/{{d.name}}">
-      <img class='diet-img' src="{{d.image}}" alt="{{d.name}}">
-      <div class="txt">{{d.name}}</div>
-    </a>
+<div class="wrapper">
+  <div class="diets">
+    {% for d in g.diet_icons %}
+    <div class="diet">
+      <a class="diet-link" href="/recipes/{{d.name}}">
+        <img class='diet-img' src="{{d.image}}" alt="{{d.name}}">
+        <div class="txt">{{d.name}}</div>
+      </a>
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
 
 <!-- END CAROUSEL -->
@@ -32,34 +33,32 @@
 
     <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5 col-xl-4 my-2">
 
-      <div class="card border mb-4 mx-auto p-1">
+      <a href="/recipes/{{r.id}}" data-id="{{r.id}}" class="show-recipe">
 
-        <img src="{{r.image}}" class="card-img-top" alt="{{r.title}}">
+        <div class="card border mb-4 mx-auto p-1 h-100">
 
-        <div class="card-body py-1">
-          <h4 class="card-title my-2">{{r.title}}</h4>
-          <!--
-          <div class="card-body">
-            <p class="card-text my-0">Prep Time: {{r.readyInMinutes}} minutes</p>
-            <p class="card-text my-0">Serves: {{r.servings}}</p> -->
+          <img src="{{r.image}}" class="card-img-top" alt="{{r.title}}">
 
-          <!-- show link to original webpage -->
-          <!-- <a href="{{r.sourceUrl}}" target="_blank" class="card-text mb-1 d-block text-center"><small
-                class="text-muted">{{r.sourceName}}</small></a> -->
-          <!-- end showlink -->
+          <div class="card-body py-1">
+            <!-- Check is name has a "+", display name before "+" -->
+            {% set name = r.title.split('+') %}
+            <h3 class="card-title my-2">{{name[0]}}</h3>
 
-          <!-- </div> -->
-          <a href="/recipes/{{r.id}}" data-id="{{r.id}}" class="btn btn-info my-3">Show Recipe</a>
+            <!-- FAVORITES ICON -->
+            {% if g.user %}
+            <button data-id="{{r.id}}" class='fav btn btn-sm'><i
+                class="{% if r.id in recipe_ids %}fas fa-heart fa-2x{% else %}far fa-heart fa-2x{% endif %}"></i></button>
+            {% else %}
+            <a tabindex="0" class='fav btn btn-sm pop' role="button" data-toggle="popover" data-trigger="focus"
+              data-placement="bottom" data-content="Please login to favorite a recipe"><i
+                class="far fa-heart fa-2x"></i></a>
+            {% endif %}
+            <!-- </div> -->
 
-
-          <!-- FAVORITES ICON -->
-
-          <button style="float: right;" data-id="{{r.id}}" class='fav btn btn-sm'><i
-              class="{% if r.id in recipe_ids %}fas fa-heart fa-2x{% else %}far fa-heart fa-2x{% endif %}"></i></button>
-
-          <!-- END FAVORITES -->
+            <!-- END FAVORITES -->
+          </div>
         </div>
-      </div>
+      </a>
     </div>
 
     {% endfor %}

@@ -1,6 +1,3 @@
-api.rest/
-secret.py/
-recipes.py/
-spoonacular.py/
-__pycache__/
-venv/
+/api.rest
+/__pycache__
+/venv

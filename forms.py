@@ -9,7 +9,7 @@ from wtforms.validators import InputRequired, Email, Length, Optional
 class SignupForm(FlaskForm):
     """ User signup form  """
     username = StringField("Username", validators=[InputRequired(message="Username required")])
-    password = PasswordField("Password", validators=[InputRequired(message="Password required")])
+    password = PasswordField("Password", validators=[InputRequired(message="Password required"), Length(min=6, max=25, message="Password must be at least 6 characters")])
     email = EmailField("Email", validators=[InputRequired(message="Email required"), Email(message="Invalid email")])
     img_url = URLField('Profile Image (optional)', validators=[Optional()])
 
