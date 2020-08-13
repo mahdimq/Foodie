@@ -17,7 +17,8 @@ connect_db(app)
 
 # #################### SPOONACULAR API INFO ########################
 BASE_URL = "https://api.spoonacular.com/recipes"
-API_KEY = os.environ.get('KEY', key)
+API_KEY = os.environ.get('KEY')
+# API_KEY = key #<-- comment out for production
 
 # ########################## USER SESSION ##########################
 CURR_USER = "user_id"
