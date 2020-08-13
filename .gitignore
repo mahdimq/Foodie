@@ -1,4 +1,4 @@
 /api.rest
 /__pycache__
 /venv
-/config
+/config.py
